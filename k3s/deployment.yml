@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wedding-rsvp-registry
+spec:
+  selector:
+    matchLabels:
+      app: wedding-rsvp-registry
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: wedding-rsvp-registry
+    spec:
+      containers:
+        - name: wedding-rsvp-registry
+          image: leonardorocha1990/wedding-rsvp-registry:0.0.1-SNAPSHOT
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PI_DB_HOST
+              value: pi-mariadb
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: password

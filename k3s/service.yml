@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wedding-rsvp-registry
+  labels:
+    app: wedding-rsvp-registry
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 30715
+      protocol: TCP
+      name: wedding-rsvp-registry
+  selector:
+    app: wedding-rsvp-registry
