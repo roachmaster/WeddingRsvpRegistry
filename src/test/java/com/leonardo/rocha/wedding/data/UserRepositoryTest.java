@@ -29,6 +29,7 @@ public class UserRepositoryTest {
         assertNotNull(user1.getId());
         assertNotNull(user2.getId());
     }
+
     @Test
     public void testFetchData(){
         /*Test data retrieval*/

@@ -1,13 +1,11 @@
 package com.leonardo.rocha.wedding.data;
 
-import com.google.common.base.Objects;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Objects.*;
 
 @Entity
 @Table(name = "user_tbl")

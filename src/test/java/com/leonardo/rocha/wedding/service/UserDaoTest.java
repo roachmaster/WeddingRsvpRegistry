@@ -9,15 +9,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,8 +42,8 @@ class UserDaoTest {
     void createUser() {
         User testUserData = getTestUser();
         setUpCreateUserMock(testUserData);
-        ResponseEntity<String> response = this.uut.createUser("TestName", 25);
-        assertEquals(testUserData.toString(),response.getBody());
+        User response = this.uut.createUser("TestName", 25);
+        assertEquals(testUserData,response);
     }
 
     private void setUpCreateUserMock(User testUserData) {
@@ -53,15 +52,14 @@ class UserDaoTest {
 
     @Test
     void getUsers() {
-        List<User> testUserList = getTestUserList();
-        ResponseEntity<String> expectedResponse = setUpGetUsersMock(testUserList);
-        ResponseEntity<String> response = this.uut.getUsers();
-        assertEquals(expectedResponse, response);
+        List<User> expected = getTestUserList();
+        setUpGetUsersMock(expected);
+        List<User> response = this.uut.getUsers();
+        assertEquals(expected, response);
     }
 
-    private ResponseEntity<String> setUpGetUsersMock(List<User> testUserList ) {
+    private void setUpGetUsersMock(List<User> testUserList ) {
         when(this.userRepository.findAll()).thenReturn(testUserList);
-        return new ResponseEntity<>(UserDao.getAsString(testUserList), HttpStatus.OK);
     }
 
     private User getTestUser(){
@@ -102,8 +100,8 @@ class UserDaoTest {
     @Test
     void getUser_name() {
         User expectedUser = setUpGetUserNameMock();
-        ResponseEntity<String> response = this.uut.getUser(expectedUser.getName());
-        assertEquals(expectedUser.toString(), response.getBody());
+        User response = this.uut.getUser(expectedUser.getName());
+        assertEquals(expectedUser, response);
     }
 
     private User setUpGetUserNameMock() {
@@ -115,42 +113,39 @@ class UserDaoTest {
     @Test
     void updateUser() {
         int updatedAge = 26;
-        ResponseEntity<String> expectedUser = setUpdateUserMock(updatedAge);
-        ResponseEntity<String> updatedUser = this.uut.updateUser("newName", updatedAge);
+        User expectedUser = setUpdateUserMock(updatedAge);
+        User updatedUser = this.uut.updateUser("newName", updatedAge);
         assertEquals(expectedUser, updatedUser);
     }
 
-    private ResponseEntity<String> setUpdateUserMock(int updatedAge) {
+    private User setUpdateUserMock(int updatedAge) {
         User updatedUser = getTestUser();
         updatedUser.setAge(updatedAge);
         when(this.userRepository.findByName(anyString())).thenReturn(getTestUser());
         when(this.userRepository.save(any())).thenReturn(updatedUser);
-        return new ResponseEntity<>(updatedUser.toString(), HttpStatus.OK);
+        return updatedUser;
     }
 
     @Test
     void deleteUsers() {
-        ResponseEntity<String> expected = setUpDeleteUsersMock(true);
-        ResponseEntity<String> actual = this.uut.deleteUsers();
+        long expected = setUpDeleteUsersMock(true);
+        long actual = this.uut.deleteUsers();
         assertEquals(expected, actual);
     }
 
     @Test
     void deleteUsers_fail() {
-        ResponseEntity<String> expected = setUpDeleteUsersMock(false);
-        ResponseEntity<String> actual = this.uut.deleteUsers();
+        long expected = setUpDeleteUsersMock(false);
+        long actual = this.uut.deleteUsers();
         assertEquals(expected, actual);
     }
 
-    private ResponseEntity<String> setUpDeleteUsersMock(boolean isEmpty) {
+    private long setUpDeleteUsersMock(boolean isEmpty) {
         List<User> users = new ArrayList<>();
         if(!isEmpty){
             users.add(getTestUser());
         }
         when(this.userRepository.findAll()).thenReturn(users);
-        if(!isEmpty){
-            return new ResponseEntity<>(String.format("Users should have been deleted but size is : %s",users.size()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(String.format("Users have been deleted, size is : %s",0), HttpStatus.OK);
+        return users.size();
     }
 }
