@@ -112,13 +112,45 @@ class UserDaoTest {
         return testUser;
     }
 
-//    @Test
-//    void updateUser() {
-//    }
-//
-//    @Test
-//    void deleteUsers() {
-//    }
+    @Test
+    void updateUser() {
+        int updatedAge = 26;
+        ResponseEntity<String> expectedUser = setUpdateUserMock(updatedAge);
+        ResponseEntity<String> updatedUser = this.uut.updateUser("newName", updatedAge);
+        assertEquals(expectedUser, updatedUser);
+    }
 
+    private ResponseEntity<String> setUpdateUserMock(int updatedAge) {
+        User updatedUser = getTestUser();
+        updatedUser.setAge(updatedAge);
+        when(this.userRepository.findByName(anyString())).thenReturn(getTestUser());
+        when(this.userRepository.save(any())).thenReturn(updatedUser);
+        return new ResponseEntity<>(updatedUser.toString(), HttpStatus.OK);
+    }
 
+    @Test
+    void deleteUsers() {
+        ResponseEntity<String> expected = setUpDeleteUsersMock(true);
+        ResponseEntity<String> actual = this.uut.deleteUsers();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void deleteUsers_fail() {
+        ResponseEntity<String> expected = setUpDeleteUsersMock(false);
+        ResponseEntity<String> actual = this.uut.deleteUsers();
+        assertEquals(expected, actual);
+    }
+
+    private ResponseEntity<String> setUpDeleteUsersMock(boolean isEmpty) {
+        List<User> users = new ArrayList<>();
+        if(!isEmpty){
+            users.add(getTestUser());
+        }
+        when(this.userRepository.findAll()).thenReturn(users);
+        if(!isEmpty){
+            return new ResponseEntity<>(String.format("Users should have been deleted but size is : %s",users.size()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(String.format("Users have been deleted, size is : %s",0), HttpStatus.OK);
+    }
 }

@@ -1,16 +1,9 @@
 package com.leonardo.rocha.wedding.controller;
 
-import com.leonardo.rocha.wedding.data.User;
-import com.leonardo.rocha.wedding.data.UserRepository;
 import com.leonardo.rocha.wedding.service.UserDao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.stream.StreamSupport;
 
 @CrossOrigin
 @RestController
@@ -26,6 +19,11 @@ public class RsvpController {
 	@RequestMapping(value = "users", method = RequestMethod.GET)
 	public ResponseEntity<String> getUsers() {
 		return this.userDao.getUsers();
+	}
+
+	@RequestMapping(value = "user/{name}", method = RequestMethod.GET)
+	public ResponseEntity<String> getUser(@PathVariable String name) {
+		return this.userDao.getUser(name);
 	}
 
 	@RequestMapping(value = "user/create/name/{name}/age/{age}", method = RequestMethod.POST)

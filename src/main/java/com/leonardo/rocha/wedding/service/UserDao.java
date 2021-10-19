@@ -69,10 +69,12 @@ public class UserDao {
 
     public ResponseEntity<String> updateUser(String name, int age){
         User user = this.userRepository.findByName(name);
+        logger.info("Getting User from DB: {}", user);
         user.setName(name);
         user.setAge(age);
         User updatedUser = this.userRepository.save(user);
-        return new ResponseEntity<>(updatedUser + "\n", HttpStatus.OK);
+        logger.info("Updated User from DB: {}", updatedUser);
+        return new ResponseEntity<>(updatedUser.toString(), HttpStatus.OK);
     }
 
     public ResponseEntity<String> deleteUsers() {
