@@ -8,7 +8,7 @@ spec:
   type: NodePort
   ports:
     - port: 8080
-      nodePort: 30715
+      nodePort: 30710
       protocol: TCP
       name: wedding-rsvp-registry
   selector:
