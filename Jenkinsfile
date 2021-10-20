@@ -13,11 +13,13 @@ node("kube2"){
             stage("Integration Test"){
                 sh "export SPRING_DATASOURCE_PASSWORD=${credPw}; ./gradlew clean build test"
             }
-            sh "docker build --build-arg mariaPw=${credPw} -t ${DOCKER_USERNAME}/wedding-rsvp-registry:0.0.1-SNAPSHOT ."
+            stage("Docker"){
+                sh "docker build --build-arg mariaPw=${credPw} -t ${DOCKER_USERNAME}/wedding-rsvp-registry:0.0.1-SNAPSHOT ."
+                sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
+                sh "docker push ${DOCKER_USERNAME}/wedding-rsvp-registry:0.0.1-SNAPSHOT"
+                sh "docker rmi ${DOCKER_USERNAME}/wedding-rsvp-registry:0.0.1-SNAPSHOT"
+            }
         }
-        sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
-        sh "docker push ${DOCKER_USERNAME}/wedding-rsvp-registry:0.0.1-SNAPSHOT"
-        sh "docker rmi ${DOCKER_USERNAME}/wedding-rsvp-registry:0.0.1-SNAPSHOT"
     }
 
     String tempString;
@@ -28,7 +30,8 @@ node("kube2"){
             sh "kubectl create secret generic mysql-pass --from-literal=password=${credPw}"
         }
     }
-
+    stage("k3s Deployment"){
+    }
     tempString = sh(returnStatus: true, script: 'kubectl get deployments | grep -c wedding-rsvp-registry')
     if(!tempString.trim().equals("1")){
         println("Removing wedding-rsvp-registry deployment");
