@@ -1,7 +1,7 @@
 node("kube2"){
     sh 'ls'
     sh 'pwd'
-    git 'git@github.com:roachmaster/gateWayDemo.git'
+    git 'git@github.com:roachmaster/WeddingRsvpRegistry.git'
     withCredentials([usernamePassword(credentialsId: '87e61f11-079d-4052-b083-ea5859f0f85b', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
         withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
             sh "export SPRING_DATASOURCE_PASSWORD=${credPw}; ./gradlew clean build test"
@@ -28,7 +28,7 @@ node("kube2"){
     }
     sh "kubectl create -f k3s/deployment.yml"
 
-    tempString = sh(returnStatus: true, script: 'kubectl get svc | grep -c gateway-demo')
+    tempString = sh(returnStatus: true, script: 'kubectl get svc | grep -c wedding-rsvp-registry')
     if(!tempString.trim().equals("1")){
         println("Removing wedding-rsvp-registry svc");
         sh "kubectl delete svc wedding-rsvp-registry"
