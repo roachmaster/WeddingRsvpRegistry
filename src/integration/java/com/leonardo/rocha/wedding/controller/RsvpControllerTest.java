@@ -27,13 +27,13 @@ public class RsvpControllerTest {
     @Value("${spring.datasource.url}")
     String url;
 
-
-    public RsvpControllerTest() {
-        logger.info("look leo spring.datasource.url: {}", url);
-    }
+    @Value("${spring.datasource.password}")
+    String pw;
 
     @Before
     public void setUp() throws Exception {
+        logger.info("look leo spring.datasource.url: {}", url);
+        logger.info("look leo spring.datasource.password: {}", pw);
         cut.deleteUsers();
     }
 
