@@ -10,9 +10,11 @@ node("kube2"){
             stage("Unit Test"){
                 sh "./gradlew test"
             }
-            
-                sh "export SPRING_DATASOURCE_PASSWORD=${credPw}; export SPRING_PROFILES_ACTIVE=default; ./gradlew clean build"
-
+            stage("Integration Test"){
+                withEnv(["SPRING_DATASOURCE_PASSWORD=${credPw}"]) {
+                    sh "./gradlew clean build"
+                }
+            }
             stage("Docker"){
                 sh "docker build --build-arg mariaPw=${credPw} -t ${DOCKER_USERNAME}/wedding-rsvp-registry:0.0.1-SNAPSHOT ."
                 sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
