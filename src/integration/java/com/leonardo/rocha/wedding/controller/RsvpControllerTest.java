@@ -26,6 +26,12 @@ public class RsvpControllerTest {
     public RsvpControllerTest() {
         logger.info("look leo SPRING_PROFILES_ACTIVE: {}", System.getenv("SPRING_PROFILES_ACTIVE"));
         logger.info("look leo SPRING_DATASOURCE_PASSWORD: {}", System.getenv("SPRING_DATASOURCE_PASSWORD"));
+
+        logger.info("look leo SPRING_PROFILES_ACTIVE: {}", System.getProperty("SPRING_PROFILES_ACTIVE"));
+        logger.info("look leo SPRING_DATASOURCE_PASSWORD: {}", System.getProperty("SPRING_DATASOURCE_PASSWORD"));
+
+        logger.info("look leo spring.datasource.password: {}", System.getProperty("spring.datasource.password"));
+    }
     }
 
     @Before
