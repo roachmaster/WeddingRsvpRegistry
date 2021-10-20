@@ -19,6 +19,8 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k3s
             - name: PI_DB_HOST
               value: pi-mariadb
             - name: SPRING_DATASOURCE_PASSWORD
