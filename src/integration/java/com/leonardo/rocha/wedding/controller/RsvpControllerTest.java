@@ -32,7 +32,6 @@ public class RsvpControllerTest {
 
         logger.info("look leo spring.datasource.password: {}", System.getProperty("spring.datasource.password"));
     }
-    }
 
     @Before
     public void setUp() throws Exception {
