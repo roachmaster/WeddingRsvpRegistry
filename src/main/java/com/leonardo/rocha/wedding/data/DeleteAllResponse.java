@@ -7,7 +7,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 
 public class DeleteAllResponse {
     private String description;
-    private long numOfUsers;
+    private long numOfGuests;
 
     public String getDescription() {
         return description;
@@ -17,19 +17,19 @@ public class DeleteAllResponse {
         this.description = description;
     }
 
-    public long getNumOfUsers() {
-        return numOfUsers;
+    public long getNumOfGuests() {
+        return numOfGuests;
     }
 
-    public void setNumOfUsers(long numOfUsers) {
-        this.numOfUsers = numOfUsers;
+    public void setNumOfGuests(long numOfGuests) {
+        this.numOfGuests = numOfGuests;
     }
 
     @Override
     public String toString() {
         return toStringHelper(this)
                 .add("description", description)
-                .add("numOfUsers", numOfUsers)
+                .add("numOfGuests", numOfGuests)
                 .toString();
     }
 
@@ -41,11 +41,11 @@ public class DeleteAllResponse {
 
         DeleteAllResponse that = (DeleteAllResponse) o;
 
-        return new EqualsBuilder().append(getNumOfUsers(), that.getNumOfUsers()).append(getDescription(), that.getDescription()).isEquals();
+        return new EqualsBuilder().append(getNumOfGuests(), that.getNumOfGuests()).append(getDescription(), that.getDescription()).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(getDescription()).append(getNumOfUsers()).toHashCode();
+        return new HashCodeBuilder(17, 37).append(getDescription()).append(getNumOfGuests()).toHashCode();
     }
 }

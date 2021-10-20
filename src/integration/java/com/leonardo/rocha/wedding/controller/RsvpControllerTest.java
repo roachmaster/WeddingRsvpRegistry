@@ -1,6 +1,6 @@
 package com.leonardo.rocha.wedding.controller;
 
-import com.leonardo.rocha.wedding.data.User;
+import com.leonardo.rocha.wedding.data.Guest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,25 +34,25 @@ public class RsvpControllerTest {
     public void setUp() throws Exception {
         logger.info("look leo spring.datasource.url: {}", url);
         logger.info("look leo spring.datasource.password: {}", pw);
-        cut.deleteUsers();
+        cut.deleteGuests();
     }
 
     @After
     public void tearDown() throws Exception {
-        cut.deleteUsers();
+        cut.deleteGuests();
     }
 
     @Test
     public void integrationTest(){
-        ResponseEntity<User> createResponse = cut.createUser("Leo", 30);
+        ResponseEntity<Guest> createResponse = cut.createGuest("Leo", 30);
         logger.info(Objects.requireNonNull(createResponse.getBody()).toString());
-        ResponseEntity<User> createResponse1 = cut.createUser("Emily", 31);
+        ResponseEntity<Guest> createResponse1 = cut.createGuest("Emily", 31);
         logger.info(Objects.requireNonNull(createResponse1.getBody()).toString());
-        ResponseEntity<User> getResponse = cut.getUser("Leo");
+        ResponseEntity<Guest> getResponse = cut.getGuest("Leo");
         logger.info(Objects.requireNonNull(getResponse.getBody()).toString());
-        ResponseEntity<List<User>> response = cut.getUsers();
+        ResponseEntity<List<Guest>> response = cut.getGuests();
         logger.info(Objects.requireNonNull(response.getBody()).toString());
-        ResponseEntity<User> updateResponse = cut.updateUser("Leo", 31);
+        ResponseEntity<Guest> updateResponse = cut.updateGuest("Leo", 31);
         logger.info(Objects.requireNonNull(updateResponse.getBody()).toString());
     }
 }

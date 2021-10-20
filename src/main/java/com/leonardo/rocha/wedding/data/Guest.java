@@ -2,27 +2,30 @@ package com.leonardo.rocha.wedding.data;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
 @Entity
-@Table(name = "user_tbl")
-public class User {
+@Table(name = "guest_tbl")
+public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     private String name;
-    private int age;
+    private int maxGuest;
+    private int confirmedGuest;
 
-    public User() {
+    public Guest() {
     }
 
-    public User(String name, int age) {
+    public Guest(String name, int maxGuest, int confirmedGuest) {
         this.name = name;
-        this.age = age;
+        this.maxGuest = maxGuest;
+        this.confirmedGuest = confirmedGuest;
     }
     public Integer getId() {
         return id;
@@ -36,35 +39,44 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
-    public int getAge() {
-        return age;
+    public Integer getMaxGuest() {
+        return maxGuest;
     }
-    public void setAge(int age) {
-        this.age = age;
+    public void setMaxGuest(int maxGuest) {
+        this.maxGuest = maxGuest;
+    }
+    public Integer getConfirmedGuest() {
+        return confirmedGuest;
+    }
+
+    public void setConfirmedGuest(int confirmedGuest) {
+        this.confirmedGuest = confirmedGuest;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof User)) return false;
+        if (!(o instanceof Guest)) return false;
 
-        User user = (User) o;
+        Guest guest = (Guest) o;
 
-        return new EqualsBuilder().append(getAge(), user.getAge()).append(getId(), user.getId()).append(getName(), user.getName()).isEquals();
+        return new EqualsBuilder().append(getMaxGuest(), guest.getMaxGuest()).append(getId(), guest.getId()).append(getName(), guest.getName()).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(getId()).append(getName()).append(getAge()).toHashCode();
+        return new HashCodeBuilder(17, 37).append(getId()).append(getName()).append(getMaxGuest()).toHashCode();
     }
+
 
     @Override
     public String toString() {
-        return toStringHelper(this)
-                .add("id", id)
-                .add("name", name)
-                .add("age", age)
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("maxGuest", maxGuest)
+                .append("confirmedGuest", confirmedGuest)
                 .toString();
     }
 }

@@ -1,12 +1,10 @@
 package com.leonardo.rocha.wedding.service;
 
-import com.leonardo.rocha.wedding.data.User;
-import com.leonardo.rocha.wedding.data.UserRepository;
+import com.leonardo.rocha.wedding.data.Guest;
+import com.leonardo.rocha.wedding.data.GuestRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,62 +12,65 @@ import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Component
-public class UserDao {
-    private static final Logger logger = LoggerFactory.getLogger(UserDao.class);
+public class GuestDao {
+    private static final Logger logger = LoggerFactory.getLogger(GuestDao.class);
 
-    private final UserRepository userRepository;
+    private final GuestRepository guestRepository;
 
     @Autowired
-    public UserDao(UserRepository userRepository){
-        this.userRepository = userRepository;
+    public GuestDao(GuestRepository GuestRepository){
+        this.guestRepository = GuestRepository;
     }
 
-    public User createUser(String name, int age){
-        User newUser = new User(name,age);
-        logger.info("Adding User: {}", newUser);
-        return this.userRepository.save(newUser);
+    public Guest createGuest(String name, int maxGuest){
+        Guest newGuest = new Guest(name, maxGuest, 0);
+        logger.info("Adding Guest: {}", newGuest);
+        return this.guestRepository.save(newGuest);
     }
 
-    public List<User> getUsers() {
-        logger.info("Getting Users from DB");
-        Iterable<User> users = this.userRepository.findAll();
-        return (List<User>) users;
+    public List<Guest> getGuests() {
+        logger.info("Getting Guests from DB");
+        Iterable<Guest> Guests = this.guestRepository.findAll();
+        return (List<Guest>) Guests;
     }
 
-    public User getUser(int id) {
-        logger.info("Getting Users with id {} from DB", id);
-        Optional<User> optionalUser = this.userRepository.findById(id);
+    public Guest getGuest(int id) {
+        logger.info("Getting Guests with id {} from DB", id);
+        Optional<Guest> optionalGuest = this.guestRepository.findById(id);
 
-        User user = null;
-        if (optionalUser.isPresent()) {
-            user = optionalUser.get();
+        Guest guest = null;
+        if (optionalGuest.isPresent()) {
+            guest = optionalGuest.get();
         }
-        return user;
+        return guest;
     }
 
-    public User getUser(String name) {
-        logger.info("Getting Users from DB");
-        return this.userRepository.findByName(name);
+    public Guest getGuest(String name) {
+        logger.info("Getting Guests from DB");
+        return this.guestRepository.findByName(name);
     }
 
-    public User updateUser(String name, int age){
-        User user = this.userRepository.findByName(name);
-        logger.info("Getting User from DB: {}", user);
-        user.setName(name);
-        user.setAge(age);
-        User updatedUser = this.userRepository.save(user);
-        logger.info("Updated User from DB: {}", updatedUser);
-        return updatedUser;
+    public Guest updateGuest(String name, int confirmedGuest){
+        Guest guest = this.guestRepository.findByName(name);
+        logger.info("Getting Guest from DB: {}", guest);
+        guest.setConfirmedGuest(confirmedGuest);
+        if(guest.getMaxGuest() < guest.getConfirmedGuest()) {
+            logger.info("Guest cannot confirm bringing more than their allowed Max guests");
+            return null;
+        }
+        Guest updatedGuest = this.guestRepository.save(guest);
+        logger.info("Updated Guest from DB to: {}", updatedGuest);
+        return updatedGuest;
     }
 
-    public long deleteUsers() {
-        this.userRepository.deleteAll();
-        Iterable<User> users = this.userRepository.findAll();
-        return getNumberOfUsers(users);
+    public long deleteGuests() {
+        this.guestRepository.deleteAll();
+        Iterable<Guest> guests = this.guestRepository.findAll();
+        return getNumberOfGuests(guests);
     }
 
-    public static long getNumberOfUsers(Iterable<User> users){
-        return StreamSupport.stream(users.spliterator(), false).count();
+    public static long getNumberOfGuests(Iterable<Guest> guests){
+        return StreamSupport.stream(guests.spliterator(), false).count();
     }
 
 }

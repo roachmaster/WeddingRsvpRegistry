@@ -1,7 +1,7 @@
 package com.leonardo.rocha.wedding.service;
 
-import com.leonardo.rocha.wedding.data.User;
-import com.leonardo.rocha.wedding.data.UserRepository;
+import com.leonardo.rocha.wedding.data.Guest;
+import com.leonardo.rocha.wedding.data.GuestRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,132 +19,132 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserDaoTest {
+class GuestDaoTest {
     @InjectMocks
-    UserDao uut;
+    GuestDao uut;
 
     @Mock
-    UserRepository userRepository;
+    GuestRepository guestRepository;
     
     @BeforeEach
     void setUp() {
-        assertNotNull(this.userRepository);
+        assertNotNull(this.guestRepository);
     }
 
     @AfterEach
     void tearDown() {
         this.uut = null;
-        this.userRepository = null;
+        this.guestRepository = null;
     }
 
     @Test
-    void createUser() {
-        User testUserData = getTestUser();
-        setUpCreateUserMock(testUserData);
-        User response = this.uut.createUser("TestName", 25);
-        assertEquals(testUserData,response);
+    void createGuest() {
+        Guest testGuestData = getTestGuest();
+        setUpCreateGuestMock(testGuestData);
+        Guest response = this.uut.createGuest("TestName", 2);
+        assertEquals(testGuestData,response);
     }
 
-    private void setUpCreateUserMock(User testUserData) {
-        when(this.userRepository.save(any())).thenReturn(testUserData);
+    private void setUpCreateGuestMock(Guest testGuestData) {
+        when(this.guestRepository.save(any())).thenReturn(testGuestData);
     }
 
     @Test
-    void getUsers() {
-        List<User> expected = getTestUserList();
-        setUpGetUsersMock(expected);
-        List<User> response = this.uut.getUsers();
+    void getGuests() {
+        List<Guest> expected = getTestGuestList();
+        setUpGetGuestsMock(expected);
+        List<Guest> response = this.uut.getGuests();
         assertEquals(expected, response);
     }
 
-    private void setUpGetUsersMock(List<User> testUserList ) {
-        when(this.userRepository.findAll()).thenReturn(testUserList);
+    private void setUpGetGuestsMock(List<Guest> testGuestList) {
+        when(this.guestRepository.findAll()).thenReturn(testGuestList);
     }
 
-    private User getTestUser(){
-        return new User("TestName", 25);
+    private Guest getTestGuest(){
+        return new Guest("TestName", 25, 0);
     }
 
-    private User getTestUser(int i){
-        User user = new User("TestName" + i, 25 + i);
-        user.setId(i);
-        return user;
+    private Guest getTestGuest(int i){
+        Guest guest = new Guest("TestName" + i, 2 + i, 0);
+        guest.setId(i);
+        return guest;
     }
 
-    private List<User> getTestUserList(){
-        List<User> users = new ArrayList<>();
+    private List<Guest> getTestGuestList(){
+        List<Guest> guests = new ArrayList<>();
         for (int i = 1; i < 10; i++){
-            User user = getTestUser(i);
-            users.add(user);
+            Guest guest = getTestGuest(i);
+            guests.add(guest);
         }
-        return users;
+        return guests;
     }
 
     @Test
-    void getUser_id() {
+    void getGuest_id() {
         int id = 10;
-        User expectedUser = setUpGetUserIdMock(id);
-        User response = this.uut.getUser(id);
-        assertEquals(expectedUser, response);
+        Guest expectedGuest = setUpGetGuestIdMock(id);
+        Guest response = this.uut.getGuest(id);
+        assertEquals(expectedGuest, response);
     }
 
-    private User setUpGetUserIdMock(int id) {
-        User testUser = getTestUser();
-        testUser.setId(id);
-        Optional<User> optionalUser = Optional.of(testUser);
-        when(this.userRepository.findById(anyInt())).thenReturn(optionalUser);
-        return testUser;
-    }
-
-    @Test
-    void getUser_name() {
-        User expectedUser = setUpGetUserNameMock();
-        User response = this.uut.getUser(expectedUser.getName());
-        assertEquals(expectedUser, response);
-    }
-
-    private User setUpGetUserNameMock() {
-        User testUser = getTestUser();
-        when(this.userRepository.findByName(anyString())).thenReturn(testUser);
-        return testUser;
+    private Guest setUpGetGuestIdMock(int id) {
+        Guest testGuest = getTestGuest();
+        testGuest.setId(id);
+        Optional<Guest> optionalGuest = Optional.of(testGuest);
+        when(this.guestRepository.findById(anyInt())).thenReturn(optionalGuest);
+        return testGuest;
     }
 
     @Test
-    void updateUser() {
-        int updatedAge = 26;
-        User expectedUser = setUpdateUserMock(updatedAge);
-        User updatedUser = this.uut.updateUser("newName", updatedAge);
-        assertEquals(expectedUser, updatedUser);
+    void getGuest_name() {
+        Guest expectedGuest = setUpGetGuestNameMock();
+        Guest response = this.uut.getGuest(expectedGuest.getName());
+        assertEquals(expectedGuest, response);
     }
 
-    private User setUpdateUserMock(int updatedAge) {
-        User updatedUser = getTestUser();
-        updatedUser.setAge(updatedAge);
-        when(this.userRepository.findByName(anyString())).thenReturn(getTestUser());
-        when(this.userRepository.save(any())).thenReturn(updatedUser);
-        return updatedUser;
+    private Guest setUpGetGuestNameMock() {
+        Guest testGuest = getTestGuest();
+        when(this.guestRepository.findByName(anyString())).thenReturn(testGuest);
+        return testGuest;
     }
 
     @Test
-    void deleteUsers() {
-        long expected = setUpDeleteUsersMock(true);
-        long actual = this.uut.deleteUsers();
+    void updateGuest() {
+        int updatedMaxGuest = 26;
+        Guest expectedGuest = setUpdateGuestMock(updatedMaxGuest);
+        Guest updatedGuest = this.uut.updateGuest("newName", updatedMaxGuest);
+        assertEquals(expectedGuest, updatedGuest);
+    }
+
+    private Guest setUpdateGuestMock(int updatedAge) {
+        Guest updatedGuest = getTestGuest();
+        updatedGuest.setMaxGuest(updatedAge);
+        when(this.guestRepository.findByName(anyString())).thenReturn(getTestGuest());
+        when(this.guestRepository.save(any())).thenReturn(updatedGuest);
+        return updatedGuest;
+    }
+
+    @Test
+    void deleteGuests() {
+        long expected = setUpDeleteGuestsMock(true);
+        long actual = this.uut.deleteGuests();
         assertEquals(expected, actual);
     }
 
     @Test
-    void deleteUsers_fail() {
-        long expected = setUpDeleteUsersMock(false);
-        long actual = this.uut.deleteUsers();
+    void deleteGuests_fail() {
+        long expected = setUpDeleteGuestsMock(false);
+        long actual = this.uut.deleteGuests();
         assertEquals(expected, actual);
     }
 
-    private long setUpDeleteUsersMock(boolean isEmpty) {
-        List<User> users = new ArrayList<>();
+    private long setUpDeleteGuestsMock(boolean isEmpty) {
+        List<Guest> guests = new ArrayList<>();
         if(!isEmpty){
-            users.add(getTestUser());
+            guests.add(getTestGuest());
         }
-        when(this.userRepository.findAll()).thenReturn(users);
-        return users.size();
+        when(this.guestRepository.findAll()).thenReturn(guests);
+        return guests.size();
     }
 }

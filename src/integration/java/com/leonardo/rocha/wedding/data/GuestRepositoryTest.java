@@ -1,6 +1,6 @@
 package com.leonardo.rocha.wedding.data;
 
-import com.leonardo.rocha.wedding.service.UserDao;
+import com.leonardo.rocha.wedding.service.GuestDao;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,34 +12,34 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserRepositoryTest {
+public class GuestRepositoryTest {
     @Autowired
-    private UserRepository userRepository;
+    private GuestRepository guestRepository;
 
     @Before
     public void setUp() throws Exception {
-        this.userRepository.deleteAll();
-        User user1= new User("Alice", 23);
-        User user2= new User("Bob", 38);
-        //save user, verify has ID value after save
-        assertNull(user1.getId());
-        assertNull(user2.getId());//null before save
-        this.userRepository.save(user1);
-        this.userRepository.save(user2);
-        assertNotNull(user1.getId());
-        assertNotNull(user2.getId());
+        this.guestRepository.deleteAll();
+        Guest guest1 = new Guest("Alice", 3, 2);
+        Guest guest2 = new Guest("Bob", 2, 2);
+        //save guest, verify has ID value after save
+        assertNull(guest1.getId());
+        assertNull(guest2.getId());//null before save
+        this.guestRepository.save(guest1);
+        this.guestRepository.save(guest2);
+        assertNotNull(guest1.getId());
+        assertNotNull(guest2.getId());
     }
 
     @Test
     public void testFetchData(){
         /*Test data retrieval*/
-        User userA = userRepository.findByName("Bob");
-        assertNotNull(userA);
-        assertEquals(38, userA.getAge());
+        Guest guestA = guestRepository.findByName("Bob");
+        assertNotNull(guestA);
+        assertEquals(new Integer(2), guestA.getMaxGuest());
         /*Get all products, list should only have two*/
-        Iterable<User> users = userRepository.findAll();
-        long count = UserDao.getNumberOfUsers(users);
+        Iterable<Guest> guests = guestRepository.findAll();
+        long count = GuestDao.getNumberOfGuests(guests);
         assertEquals(count, 2);
-        this.userRepository.deleteAll();
+        this.guestRepository.deleteAll();
     }
 }
