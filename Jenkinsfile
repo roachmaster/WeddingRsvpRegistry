@@ -1,6 +1,4 @@
 node("kube2"){
-    sh 'ls'
-    sh 'pwd'
     git 'git@github.com:roachmaster/WeddingRsvpRegistry.git'
     stage("compile"){
         sh "./gradlew clean compileJava"
@@ -10,9 +8,7 @@ node("kube2"){
     }
     stage("Integration Test"){
         withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
-            withEnv(["SPRING_DATASOURCE_PASSWORD=${credPw}"]) {
-                sh "./gradlew clean build"
-            }
+            sh "export SPRING_DATASOURCE_PASSWORD=${credPw}; ./gradlew clean build test"
         }
     }
     stage("Docker"){
