@@ -36,18 +36,15 @@ public class UserDao {
         return (List<User>) users;
     }
 
-    public ResponseEntity<String> getUser(int id) {
+    public User getUser(int id) {
         logger.info("Getting Users with id {} from DB", id);
         Optional<User> optionalUser = this.userRepository.findById(id);
 
-        String userString;
+        User user = null;
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            userString= user.toString();
-        } else {
-            userString =  id + " does not exist.";
+            user = optionalUser.get();
         }
-        return new ResponseEntity<>(userString, HttpStatus.OK);
+        return user;
     }
 
     public User getUser(String name) {

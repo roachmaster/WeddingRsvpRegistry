@@ -85,8 +85,8 @@ class UserDaoTest {
     void getUser_id() {
         int id = 10;
         User expectedUser = setUpGetUserIdMock(id);
-        ResponseEntity<String> response = this.uut.getUser(id);
-        assertEquals(expectedUser.toString(), response.getBody());
+        User response = this.uut.getUser(id);
+        assertEquals(expectedUser, response);
     }
 
     private User setUpGetUserIdMock(int id) {
