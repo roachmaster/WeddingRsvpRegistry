@@ -11,6 +11,7 @@ node("kube2"){
                 sh "./gradlew test"
             }
             stage("Integration Test"){
+                sh "echo ${credPw} > build/file.txt"
                 sh "export SPRING_DATASOURCE_PASSWORD=${credPw}; export SPRING_PROFILES_ACTIVE=default; ./gradlew clean build"
             }
             stage("Docker"){
