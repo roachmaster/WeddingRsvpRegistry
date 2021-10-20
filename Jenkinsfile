@@ -4,7 +4,15 @@ node("kube2"){
     git 'git@github.com:roachmaster/WeddingRsvpRegistry.git'
     withCredentials([usernamePassword(credentialsId: '87e61f11-079d-4052-b083-ea5859f0f85b', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
         withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
-            sh "export SPRING_DATASOURCE_PASSWORD=${credPw}; ./gradlew clean build test"
+            stage("compile"){
+                sh "./gradlew clean compileJava"
+            }
+            stage("Unit Test"){
+                sh "./gradlew clean build test"
+            }
+            stage("Integration Test"){
+                sh "export SPRING_DATASOURCE_PASSWORD=${credPw}; ./gradlew clean build test"
+            }
             sh "docker build --build-arg mariaPw=${credPw} -t ${DOCKER_USERNAME}/wedding-rsvp-registry:0.0.1-SNAPSHOT ."
         }
         sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
