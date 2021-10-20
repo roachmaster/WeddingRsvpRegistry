@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -23,14 +24,12 @@ public class RsvpControllerTest {
     @Autowired
     RsvpController cut;
 
+    @Value("${spring.datasource.url}")
+    String url;
+
+
     public RsvpControllerTest() {
-        logger.info("look leo SPRING_PROFILES_ACTIVE: {}", System.getenv("SPRING_PROFILES_ACTIVE"));
-        logger.info("look leo SPRING_DATASOURCE_PASSWORD: {}", System.getenv("SPRING_DATASOURCE_PASSWORD"));
-
-        logger.info("look leo SPRING_PROFILES_ACTIVE: {}", System.getProperty("SPRING_PROFILES_ACTIVE"));
-        logger.info("look leo SPRING_DATASOURCE_PASSWORD: {}", System.getProperty("SPRING_DATASOURCE_PASSWORD"));
-
-        logger.info("look leo spring.datasource.password: {}", System.getProperty("spring.datasource.password"));
+        logger.info("look leo spring.datasource.url: {}", url);
     }
 
     @Before
