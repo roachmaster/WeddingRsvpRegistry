@@ -20,8 +20,15 @@ import java.util.Objects;
 public class RsvpControllerTest {
     private static final Logger logger = LoggerFactory.getLogger(RsvpControllerTest.class);
 
-    @Autowired
     RsvpController cut;
+
+    @Autowired
+    public RsvpControllerTest(RsvpController cut) {
+        logger.info("look leo SPRING_PROFILES_ACTIVE: {}", System.getenv("SPRING_PROFILES_ACTIVE"));
+        logger.info("look leo SPRING_DATASOURCE_PASSWORD: {}", System.getenv("SPRING_DATASOURCE_PASSWORD"));
+
+        this.cut = cut;
+    }
 
     @Before
     public void setUp() throws Exception {
