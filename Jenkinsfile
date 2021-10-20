@@ -8,10 +8,10 @@ node("kube2"){
                 sh "./gradlew clean compileJava"
             }
             stage("Unit Test"){
-                sh "./gradlew clean build test"
+                sh "./gradlew test"
             }
             stage("Integration Test"){
-                sh "export SPRING_DATASOURCE_PASSWORD=${credPw}; ./gradlew clean build test"
+                sh "export SPRING_DATASOURCE_PASSWORD=${credPw}; ./gradlew build"
             }
             stage("Docker"){
                 sh "docker build --build-arg mariaPw=${credPw} -t ${DOCKER_USERNAME}/wedding-rsvp-registry:0.0.1-SNAPSHOT ."
@@ -21,28 +21,28 @@ node("kube2"){
             }
         }
     }
-
-    String tempString;
-    withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
-        tempString = sh(returnStatus: true, script: 'kubectl get secrets | grep -c mysql-pass')
-        if(tempString.trim().equals("1")){
-            println("Adding Secret");
-            sh "kubectl create secret generic mysql-pass --from-literal=password=${credPw}"
-        }
-    }
     stage("k3s Deployment"){
-    }
-    tempString = sh(returnStatus: true, script: 'kubectl get deployments | grep -c wedding-rsvp-registry')
-    if(!tempString.trim().equals("1")){
-        println("Removing wedding-rsvp-registry deployment");
-        sh "kubectl delete deployment wedding-rsvp-registry"
-    }
-    sh "kubectl create -f k3s/deployment.yml"
+        String tempString;
+        withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
+            tempString = sh(returnStatus: true, script: 'kubectl get secrets | grep -c mysql-pass')
+            if(tempString.trim().equals("1")){
+                println("Adding Secret");
+                sh "kubectl create secret generic mysql-pass --from-literal=password=${credPw}"
+            }
+        }
 
-    tempString = sh(returnStatus: true, script: 'kubectl get svc | grep -c wedding-rsvp-registry')
-    if(!tempString.trim().equals("1")){
-        println("Removing wedding-rsvp-registry svc");
-        sh "kubectl delete svc wedding-rsvp-registry"
+        tempString = sh(returnStatus: true, script: 'kubectl get deployments | grep -c wedding-rsvp-registry')
+        if(!tempString.trim().equals("1")){
+            println("Removing wedding-rsvp-registry deployment");
+            sh "kubectl delete deployment wedding-rsvp-registry"
+        }
+        sh "kubectl create -f k3s/deployment.yml"
+
+        tempString = sh(returnStatus: true, script: 'kubectl get svc | grep -c wedding-rsvp-registry')
+        if(!tempString.trim().equals("1")){
+            println("Removing wedding-rsvp-registry svc");
+            sh "kubectl delete svc wedding-rsvp-registry"
+        }
+        sh "kubectl apply -f k3s/service.yml"
     }
-    sh "kubectl apply -f k3s/service.yml"
 }
