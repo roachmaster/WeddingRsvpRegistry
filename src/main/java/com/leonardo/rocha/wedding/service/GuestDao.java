@@ -68,7 +68,7 @@ public class GuestDao {
         if(guest.getMaxGuest() >= confirmedGuest) {
             return saveGoingGuest(guest, confirmedGuest);
         } else {
-            logger.info("Guest cannot confirm bringing more than their allowed Max guests");
+            logger.info("Guest cannot confirm bringing {} when their allowed Max guests is {}", confirmedGuest, guest.getMaxGuest());
             return  null;
         }
     }

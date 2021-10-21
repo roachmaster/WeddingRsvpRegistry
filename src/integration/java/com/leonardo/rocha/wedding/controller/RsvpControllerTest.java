@@ -1,5 +1,6 @@
 package com.leonardo.rocha.wedding.controller;
 
+import com.leonardo.rocha.wedding.data.DeleteAllResponse;
 import com.leonardo.rocha.wedding.data.Guest;
 import org.junit.After;
 import org.junit.Before;
@@ -10,8 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,22 +29,61 @@ public class RsvpControllerTest {
     @Autowired
     RsvpController cut;
 
-    @Value("${spring.datasource.url}")
-    String url;
-
-    @Value("${spring.datasource.password}")
-    String pw;
-
     @Before
     public void setUp() throws Exception {
-        logger.info("look leo spring.datasource.url: {}", url);
-        logger.info("look leo spring.datasource.password: {}", pw);
         cut.deleteGuests();
     }
 
     @After
     public void tearDown() throws Exception {
         cut.deleteGuests();
+    }
+
+    @Test
+    public void creatingGuestInviteTest(){
+        String name = "Emily";
+        int maxGuest = 4;
+        ResponseEntity<Guest> newGuestInvite = cut.createGuest(name, maxGuest);
+        Guest createdGuest = newGuestInvite.getBody();
+        assertEquals(HttpStatus.CREATED, newGuestInvite.getStatusCode());
+        assert createdGuest != null;
+        assertEquals(name, createdGuest.getName());
+        assertEquals(maxGuest, createdGuest.getMaxGuest());
+    }
+
+    @Test
+    public void getGuestsTest(){
+        Guest guest1 = cut.createGuest("Leo", 3).getBody();
+        Guest guest2 = cut.createGuest("Max", 5).getBody();
+
+        ResponseEntity<List<Guest>> guestsResponse = cut.getGuests();
+        List<Guest> guests = assertGetGuestsResponse(guestsResponse);
+        assertTrue(guests.contains(guest1));
+        assertTrue(guests.contains(guest2));
+    }
+
+    private List<Guest> assertGetGuestsResponse(ResponseEntity<List<Guest>> guestsResponse){
+        List<Guest> guests = guestsResponse.getBody();
+        assertEquals(HttpStatus.OK, guestsResponse.getStatusCode());
+        assert guests != null;
+        assertEquals(2, guests.size());
+        return guests;
+    }
+
+    @Test
+    public void deleteUsers(){
+        getGuestsTest();
+        assertGetGuestsResponse(cut.getGuests());
+        ResponseEntity<DeleteAllResponse> deleteGuestsResponse = cut.deleteGuests();
+        assertEquals(HttpStatus.OK, deleteGuestsResponse.getStatusCode());
+        DeleteAllResponse response = deleteGuestsResponse.getBody();
+        assert response != null;
+        assertEquals(0, response.getNumOfGuests());
+    }
+
+    @Test
+    public void updateGuest(){
+        
     }
 
     @Test
