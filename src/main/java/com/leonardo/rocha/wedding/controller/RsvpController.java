@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/")
 public class RsvpController {
-
 	private final GuestDao guestDao;
 
 	@Autowired
@@ -50,8 +49,8 @@ public class RsvpController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "guest/update/name/{name}/maxGuest/{maxGuest}", method = RequestMethod.POST)
-	public ResponseEntity<Guest> updateGuest(@PathVariable String name, @PathVariable int maxGuest) {
-		return new ResponseEntity<>(this.guestDao.updateGuest(name, maxGuest), HttpStatus.OK);
+	@RequestMapping(value = "guest/update/name/{name}/going/{going}/confirmedGuest/{confirmedGuest}", method = RequestMethod.POST)
+	public ResponseEntity<Guest> updateGuest(@PathVariable String name, @PathVariable boolean going ,@PathVariable int confirmedGuest) {
+		return new ResponseEntity<>(this.guestDao.updateGuest(name, going, confirmedGuest), HttpStatus.OK);
 	}
 }

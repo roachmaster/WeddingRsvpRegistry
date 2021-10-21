@@ -23,21 +23,20 @@ public class GuestDao {
     }
 
     public Guest createGuest(String name, int maxGuest){
-        Guest newGuest = new Guest(name, maxGuest, 0);
+        Guest newGuest = new Guest(name, maxGuest);
         logger.info("Adding Guest: {}", newGuest);
         return this.guestRepository.save(newGuest);
     }
 
     public List<Guest> getGuests() {
         logger.info("Getting Guests from DB");
-        Iterable<Guest> Guests = this.guestRepository.findAll();
-        return (List<Guest>) Guests;
+        Iterable<Guest> guests = this.guestRepository.findAll();
+        return (List<Guest>) guests;
     }
 
     public Guest getGuest(int id) {
         logger.info("Getting Guests with id {} from DB", id);
         Optional<Guest> optionalGuest = this.guestRepository.findById(id);
-
         Guest guest = null;
         if (optionalGuest.isPresent()) {
             guest = optionalGuest.get();
@@ -50,14 +49,32 @@ public class GuestDao {
         return this.guestRepository.findByName(name);
     }
 
-    public Guest updateGuest(String name, int confirmedGuest){
+    public Guest updateGuest(String name, boolean going, int confirmedGuest){
         Guest guest = this.guestRepository.findByName(name);
         logger.info("Getting Guest from DB: {}", guest);
-        guest.setConfirmedGuest(confirmedGuest);
-        if(guest.getMaxGuest() < guest.getConfirmedGuest()) {
-            logger.info("Guest cannot confirm bringing more than their allowed Max guests");
-            return null;
+        guest.setGoing(going);
+        return saveGuest(guest, confirmedGuest);
+    }
+
+    private Guest saveGuest(Guest guest, int confirmedGuest){
+        if(guest.isGoing()){
+            return validateAndSaveGoingGuest(guest, confirmedGuest);
+        } else {
+            return this.guestRepository.save(guest);
         }
+    }
+
+    private Guest validateAndSaveGoingGuest(Guest guest, int confirmedGuest){
+        if(guest.getMaxGuest() >= confirmedGuest) {
+            return saveGoingGuest(guest, confirmedGuest);
+        } else {
+            logger.info("Guest cannot confirm bringing more than their allowed Max guests");
+            return  null;
+        }
+    }
+
+    private Guest saveGoingGuest(Guest guest, int confirmedGuest){
+        guest.setConfirmedGuest(confirmedGuest);
         Guest updatedGuest = this.guestRepository.save(guest);
         logger.info("Updated Guest from DB to: {}", updatedGuest);
         return updatedGuest;
@@ -72,5 +89,4 @@ public class GuestDao {
     public static long getNumberOfGuests(Iterable<Guest> guests){
         return StreamSupport.stream(guests.spliterator(), false).count();
     }
-
 }

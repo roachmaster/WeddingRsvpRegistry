@@ -44,15 +44,15 @@ public class RsvpControllerTest {
 
     @Test
     public void integrationTest(){
-        ResponseEntity<Guest> createResponse = cut.createGuest("Leo", 30);
+        ResponseEntity<Guest> createResponse = cut.createGuest("Leo", 5);
         logger.info(Objects.requireNonNull(createResponse.getBody()).toString());
-        ResponseEntity<Guest> createResponse1 = cut.createGuest("Emily", 31);
+        ResponseEntity<Guest> createResponse1 = cut.createGuest("Emily", 6);
         logger.info(Objects.requireNonNull(createResponse1.getBody()).toString());
         ResponseEntity<Guest> getResponse = cut.getGuest("Leo");
         logger.info(Objects.requireNonNull(getResponse.getBody()).toString());
         ResponseEntity<List<Guest>> response = cut.getGuests();
         logger.info(Objects.requireNonNull(response.getBody()).toString());
-        ResponseEntity<Guest> updateResponse = cut.updateGuest("Leo", 31);
+        ResponseEntity<Guest> updateResponse = cut.updateGuest("Leo",true, 5);
         logger.info(Objects.requireNonNull(updateResponse.getBody()).toString());
     }
 }

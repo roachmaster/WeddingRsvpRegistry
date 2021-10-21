@@ -34,5 +34,5 @@ node("kube2"){
             sh "kubectl delete svc wedding-rsvp-registry"
         }
         sh "kubectl apply -f k3s/service.yml"
-    
+
 }

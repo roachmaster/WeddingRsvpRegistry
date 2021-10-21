@@ -62,11 +62,11 @@ class GuestDaoTest {
     }
 
     private Guest getTestGuest(){
-        return new Guest("TestName", 25, 0);
+        return new Guest("TestName", 25);
     }
 
     private Guest getTestGuest(int i){
-        Guest guest = new Guest("TestName" + i, 2 + i, 0);
+        Guest guest = new Guest("TestName" + i, 2 + i);
         guest.setId(i);
         return guest;
     }
@@ -113,13 +113,13 @@ class GuestDaoTest {
     void updateGuest() {
         int updatedMaxGuest = 26;
         Guest expectedGuest = setUpdateGuestMock(updatedMaxGuest);
-        Guest updatedGuest = this.uut.updateGuest("newName", updatedMaxGuest);
+        Guest updatedGuest = this.uut.updateGuest("newName",false, updatedMaxGuest);
         assertEquals(expectedGuest, updatedGuest);
     }
 
-    private Guest setUpdateGuestMock(int updatedAge) {
+    private Guest setUpdateGuestMock(int updatedMaxGuest) {
         Guest updatedGuest = getTestGuest();
-        updatedGuest.setMaxGuest(updatedAge);
+        updatedGuest.setMaxGuest(updatedMaxGuest);
         when(this.guestRepository.findByName(anyString())).thenReturn(getTestGuest());
         when(this.guestRepository.save(any())).thenReturn(updatedGuest);
         return updatedGuest;

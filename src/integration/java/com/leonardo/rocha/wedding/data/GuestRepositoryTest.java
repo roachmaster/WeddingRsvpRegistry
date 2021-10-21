@@ -19,8 +19,8 @@ public class GuestRepositoryTest {
     @Before
     public void setUp() throws Exception {
         this.guestRepository.deleteAll();
-        Guest guest1 = new Guest("Alice", 3, 2);
-        Guest guest2 = new Guest("Bob", 2, 2);
+        Guest guest1 = new Guest("Alice", 3);
+        Guest guest2 = new Guest("Bob", 2);
         //save guest, verify has ID value after save
         assertNull(guest1.getId());
         assertNull(guest2.getId());//null before save
