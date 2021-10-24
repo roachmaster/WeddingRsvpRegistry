@@ -1,6 +1,6 @@
 package com.leonardo.rocha.wedding.data;
 
-import com.leonardo.rocha.wedding.service.GuestDao;
+import com.leonardo.rocha.wedding.service.GuestDaoRepo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +38,7 @@ public class GuestRepositoryTest {
         assertEquals(new Integer(2), guestA.getMaxGuest());
         /*Get all products, list should only have two*/
         Iterable<Guest> guests = guestRepository.findAll();
-        long count = GuestDao.getNumberOfGuests(guests);
+        long count = GuestDaoRepo.getNumberOfGuests(guests);
         assertEquals(count, 2);
         this.guestRepository.deleteAll();
     }

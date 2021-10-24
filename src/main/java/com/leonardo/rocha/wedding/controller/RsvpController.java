@@ -2,7 +2,7 @@ package com.leonardo.rocha.wedding.controller;
 
 import com.leonardo.rocha.wedding.data.DeleteAllResponse;
 import com.leonardo.rocha.wedding.data.Guest;
-import com.leonardo.rocha.wedding.service.GuestDao;
+import com.leonardo.rocha.wedding.service.GuestDaoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +14,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/")
 public class RsvpController {
-	private final GuestDao guestDao;
+	private final GuestDaoRepo guestDao;
 
 	@Autowired
-	public RsvpController(GuestDao guestDao){
+	public RsvpController(GuestDaoRepo guestDao){
 		this.guestDao = guestDao;
 	}
 
