@@ -8,22 +8,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Component
-public class GuestDao {
-    private static final Logger logger = LoggerFactory.getLogger(GuestDao.class);
+public class GuestDB {
+    private static final Logger logger = LoggerFactory.getLogger(GuestDB.class);
 
     private final GuestRepository guestRepository;
 
     @Autowired
-    public GuestDao(GuestRepository GuestRepository){
+    public GuestDB(GuestRepository GuestRepository) {
         this.guestRepository = GuestRepository;
     }
 
-    public Guest createGuest(String name, int maxGuest){
-        Guest newGuest = new Guest(name, maxGuest, 0);
+    public Guest createGuest(String name, int maxGuest) {
+        Guest newGuest = new Guest(name, maxGuest);
         logger.info("Adding Guest: {}", newGuest);
         return this.guestRepository.save(newGuest);
     }
@@ -34,24 +33,20 @@ public class GuestDao {
         return (List<Guest>) Guests;
     }
 
-    public Guest getGuest(int id) {
-        logger.info("Getting Guests with id {} from DB", id);
-        return this.guestRepository.findById(id);
-    }
-
     public Guest getGuest(String name) {
         logger.info("Getting Guests from DB");
         return this.guestRepository.findByName(name);
     }
 
-    public Guest updateGuest(String name, int confirmedGuest){
+    public Guest updateGuest(String name, boolean going,int confirmedGuest) {
         Guest guest = this.guestRepository.findByName(name);
-        logger.info("Getting Guest from DB: {}", guest);
-        guest.setConfirmedGuest(confirmedGuest);
-        if(guest.getMaxGuest() < guest.getConfirmedGuest()) {
+        logger.info("Retrieved Guest from DB: {}", guest);
+        if (guest.getMaxGuest() < confirmedGuest) {
             logger.info("Guest cannot confirm bringing more than their allowed Max guests");
             return null;
         }
+        guest.setConfirmedGuest(confirmedGuest);
+        guest.setGoing(going);
         Guest updatedGuest = this.guestRepository.save(guest);
         logger.info("Updated Guest from DB to: {}", updatedGuest);
         return updatedGuest;
@@ -63,8 +58,7 @@ public class GuestDao {
         return getNumberOfGuests(guests);
     }
 
-    public static long getNumberOfGuests(Iterable<Guest> guests){
+    public static long getNumberOfGuests(Iterable<Guest> guests) {
         return StreamSupport.stream(guests.spliterator(), false).count();
     }
-
 }

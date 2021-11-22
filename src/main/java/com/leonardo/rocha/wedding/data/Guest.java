@@ -18,15 +18,17 @@ public class Guest {
     private String name;
     private int maxGuest;
     private int confirmedGuest;
+    private boolean going;
 
     public Guest() {
     }
 
-    public Guest(String name, int maxGuest, int confirmedGuest) {
+    public Guest(String name, int maxGuest) {
         this.name = name;
         this.maxGuest = maxGuest;
-        this.confirmedGuest = confirmedGuest;
+        this.confirmedGuest = 0;
     }
+
     public Integer getId() {
         return id;
     }
@@ -48,6 +50,12 @@ public class Guest {
     public Integer getConfirmedGuest() {
         return confirmedGuest;
     }
+    public boolean isGoing() {
+        return going;
+    }
+    public void setGoing(boolean going) {
+        this.going = going;
+    }
 
     public void setConfirmedGuest(int confirmedGuest) {
         this.confirmedGuest = confirmedGuest;
@@ -68,7 +76,6 @@ public class Guest {
     public int hashCode() {
         return new HashCodeBuilder(17, 37).append(getId()).append(getName()).append(getMaxGuest()).toHashCode();
     }
-
 
     @Override
     public String toString() {

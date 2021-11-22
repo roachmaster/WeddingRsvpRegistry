@@ -3,7 +3,7 @@ package com.leonardo.rocha.wedding.controller;
 import com.leonardo.rocha.wedding.data.DeleteAllResponse;
 import com.leonardo.rocha.wedding.data.Guest;
 import com.leonardo.rocha.wedding.helper.ResponseEntityHelper;
-import com.leonardo.rocha.wedding.service.GuestDao;
+import com.leonardo.rocha.wedding.service.GuestDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +15,10 @@ import java.util.List;
 @RequestMapping("/")
 public class RsvpController {
 
-	private final GuestDao guestDao;
+	private final GuestDB guestDao;
 
 	@Autowired
-	public RsvpController(GuestDao guestDao){
+	public RsvpController(GuestDB guestDao){
 		this.guestDao = guestDao;
 	}
 
@@ -42,8 +42,8 @@ public class RsvpController {
 		return ResponseEntityHelper.deleteGuests(this.guestDao);
 	}
 
-	@RequestMapping(value = "guest/update/name/{name}/maxGuest/{maxGuest}", method = RequestMethod.POST)
-	public ResponseEntity<Guest> updateGuest(@PathVariable String name, @PathVariable int maxGuest) {
-		return ResponseEntityHelper.updateGuest(this.guestDao,name,maxGuest);
+	@RequestMapping(value = "guest/update/name/{name}/going/{going}/confirmedGuest/{confirmedGuest}", method = RequestMethod.POST)
+	public ResponseEntity<Guest> updateGuest(@PathVariable String name, @PathVariable boolean going ,@PathVariable int confirmedGuest) {
+		return ResponseEntityHelper.updateGuest(this.guestDao,name,going, confirmedGuest);
 	}
 }
