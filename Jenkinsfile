@@ -1,7 +1,7 @@
 node("kube2"){
     git 'git@github.com:roachmaster/WeddingRsvpRegistry.git'
     withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
-        sh "./gradlew clean build test --info"
+        sh "./gradlew clean build test -x integrationTest --info"
         //spring.datasource.password stored in ./gradle/gradle.properties
         sh "./gradlew integrationTest --info"
     }
