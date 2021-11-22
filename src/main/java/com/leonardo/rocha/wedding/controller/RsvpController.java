@@ -2,9 +2,9 @@ package com.leonardo.rocha.wedding.controller;
 
 import com.leonardo.rocha.wedding.data.DeleteAllResponse;
 import com.leonardo.rocha.wedding.data.Guest;
+import com.leonardo.rocha.wedding.helper.ResponseEntityHelper;
 import com.leonardo.rocha.wedding.service.GuestDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,34 +24,26 @@ public class RsvpController {
 
 	@RequestMapping(value = "guests", method = RequestMethod.GET)
 	public ResponseEntity<List<Guest>> getGuests() {
-		return new ResponseEntity<>(this.guestDao.getGuests(), HttpStatus.OK);
+		return ResponseEntityHelper.getGuests(this.guestDao);
 	}
 
 	@RequestMapping(value = "guest/{name}", method = RequestMethod.GET)
 	public ResponseEntity<Guest> getGuest(@PathVariable String name) {
-		return new ResponseEntity<>(this.guestDao.getGuest(name), HttpStatus.OK);
+		return ResponseEntityHelper.getGuest(this.guestDao,name);
 	}
 
 	@RequestMapping(value = "guest/create/name/{name}/maxGuest/{maxGuest}", method = RequestMethod.POST)
 	public ResponseEntity<Guest> createGuest(@PathVariable String name, @PathVariable int maxGuest) {
-		Guest createdGuest = this.guestDao.createGuest(name, maxGuest);
-		return new ResponseEntity<>(createdGuest, HttpStatus.CREATED);
+		return ResponseEntityHelper.createGuest(this.guestDao, name, maxGuest);
 	}
 
 	@RequestMapping(value = "guests/delete", method = RequestMethod.GET)
 	public ResponseEntity<DeleteAllResponse> deleteGuests() {
-		DeleteAllResponse response = new DeleteAllResponse();
-		response.setNumOfGuests(this.guestDao.deleteGuests());
-		if(response.getNumOfGuests() != 0){
-			response.setDescription("Guests were not removed form DB table");
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		response.setDescription("Guests have been deleted");
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return ResponseEntityHelper.deleteGuests(this.guestDao);
 	}
 
 	@RequestMapping(value = "guest/update/name/{name}/maxGuest/{maxGuest}", method = RequestMethod.POST)
 	public ResponseEntity<Guest> updateGuest(@PathVariable String name, @PathVariable int maxGuest) {
-		return new ResponseEntity<>(this.guestDao.updateGuest(name, maxGuest), HttpStatus.OK);
+		return ResponseEntityHelper.updateGuest(this.guestDao,name,maxGuest);
 	}
 }

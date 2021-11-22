@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -91,8 +90,7 @@ class GuestDaoTest {
     private Guest setUpGetGuestIdMock(int id) {
         Guest testGuest = getTestGuest();
         testGuest.setId(id);
-        Optional<Guest> optionalGuest = Optional.of(testGuest);
-        when(this.guestRepository.findById(anyInt())).thenReturn(optionalGuest);
+        when(this.guestRepository.findById(anyInt())).thenReturn(testGuest);
         return testGuest;
     }
 
@@ -111,7 +109,7 @@ class GuestDaoTest {
 
     @Test
     void updateGuest() {
-        int updatedMaxGuest = 26;
+        int updatedMaxGuest = 5;
         Guest expectedGuest = setUpdateGuestMock(updatedMaxGuest);
         Guest updatedGuest = this.uut.updateGuest("newName", updatedMaxGuest);
         assertEquals(expectedGuest, updatedGuest);

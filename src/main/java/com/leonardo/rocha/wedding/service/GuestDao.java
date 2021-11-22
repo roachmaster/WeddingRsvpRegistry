@@ -36,13 +36,7 @@ public class GuestDao {
 
     public Guest getGuest(int id) {
         logger.info("Getting Guests with id {} from DB", id);
-        Optional<Guest> optionalGuest = this.guestRepository.findById(id);
-
-        Guest guest = null;
-        if (optionalGuest.isPresent()) {
-            guest = optionalGuest.get();
-        }
-        return guest;
+        return this.guestRepository.findById(id);
     }
 
     public Guest getGuest(String name) {
