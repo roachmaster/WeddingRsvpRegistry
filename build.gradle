@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.5.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'idea'
 }
 
 group = 'com.leonardo.rocha'
@@ -47,9 +48,21 @@ configurations {
 	integrationRunetime.extendsFrom(testRuntime)
 }
 
+idea {
+	module {
+		testSourceDirs += sourceSets.integration.java.srcDirs
+		testResourceDirs += sourceSets.integration.resources.srcDirs
+		scopes.TEST.plus += [ configurations.integrationCompileClasspath ]
+	}
+}
+
 task integrationTest(type: Test){
+	description = 'Runs the integration tests.'
+	group = 'verification'
 	testClassesDirs = sourceSets.integration.output.classesDirs
 	classpath = sourceSets.integration.runtimeClasspath
+	outputs.upToDateWhen { false }
+	mustRunAfter(test)
 }
 
 check.dependsOn(integrationTest)
