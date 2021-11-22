@@ -77,7 +77,6 @@ public class Guest {
         return new HashCodeBuilder(17, 37).append(getId()).append(getName()).append(getMaxGuest()).toHashCode();
     }
 
-
     @Override
     public String toString() {
         return new ToStringBuilder(this)
