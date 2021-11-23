@@ -1,6 +1,6 @@
 node("kube2"){
-    boolean buildAndTest = env.REPO_BUILD_TEST.toBoolean()
-    boolean dockerBuild = env.DOCKER_BUILD.toBoolean()
+    boolean runBuildAndTest = env.REPO_BUILD_TEST.toBoolean()
+    boolean runDockerBuild = env.DOCKER_BUILD.toBoolean()
     boolean k3sBuild = env.K3S_BUILD.toBoolean()
 
     stage("clone"){
@@ -8,26 +8,26 @@ node("kube2"){
     }
 
     stage("build"){
-        if(buildAndTest){
+        if(runBuildAndTest){
             sh "./gradlew clean build -x test -x integrationTest --info"
         }
     }
 
     stage("unit test"){
-        if(buildAndTest){
+        if(runBuildAndTest){
             sh "./gradlew clean build test -x integrationTest --info"
         }
     }
 
     stage("Integration Test"){
-        if(buildAndTest){
+        if(runBuildAndTest){
             //SPRING_DATASOURCE_PASSWORD stored in ~/.gradle/init.d/spring.gradle
             sh "./gradlew integrationTest --info"
         }
     }
 
     stage("Docker Build"){
-        if(buildAndTest && dockerBuild){
+        if(runBuildAndTest && runDockerBuild){
             withCredentials([usernamePassword(credentialsId: '87e61f11-079d-4052-b083-ea5859f0f85b', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                 def appName = "weddingRsvpRegistry"
                 def dockerImage = "wedding-rsvp-registry"
