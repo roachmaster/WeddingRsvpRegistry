@@ -55,11 +55,13 @@ node("kube2"){
             withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
                 String secretName = "mysql-pass"
                 String temp = sh(returnStatus: true, script: "kubectl get secrets | grep -c ${secretName}")
-                boolean secretExists = temp.trim().toBoolean()
-                if(secretExists){
-                    println("Adding Secret because count was ${temp} so secret exists is ${secretExists}");
-                    sh "kubectl create secret generic ${secretName} --from-literal=password=${credPw}"
-                }
+                Integer secretCount = temp.trim().toInteger()
+                boolean secretExists = secretCount > 0;
+                println("temp: ${temp}, secretCount: ${secretCount}, secretExists: ${secretExists}")
+//                 if(secretExists){
+//                     println("Adding Secret because count was ${temp} so secret exists is ${secretExists}");
+//                     sh "kubectl create secret generic ${secretName} --from-literal=password=${credPw}"
+//                 }
             }
         }
     }
@@ -68,12 +70,14 @@ node("kube2"){
         if(k3sBuild){
             String deploymentName = "wedding-rsvp-registry"
             String temp = sh(returnStatus: true, script: "kubectl get deployments | grep -c ${deploymentName}")
-            boolean deploymentExists = temp.trim().toBoolean()
-            if(deploymentExists){
-                println("Removing ${deploymentName} deployment");
-                sh "kubectl delete deployment ${deploymentName}"
-            }
-            sh "kubectl create -f k3s/deployment.yml"
+            Integer deploymentCount = temp.trim().toInteger()
+            boolean deploymentExists = deploymentCount > 0;
+            println("temp: ${temp}, deploymentCount: ${deploymentCount}, deploymentExists: ${deploymentExists}")
+//             if(deploymentExists){
+//                 println("Removing ${deploymentName} deployment");
+//                 sh "kubectl delete deployment ${deploymentName}"
+//             }
+//             sh "kubectl create -f k3s/deployment.yml"
         }
     }
 
@@ -81,12 +85,14 @@ node("kube2"){
         if(k3sBuild){
             String svcName = "wedding-rsvp-registry"
             String temp = sh(returnStatus: true, script: "kubectl get svc | grep -c ${svcName}")
-            boolean svcExists = temp.trim().toBoolean()
-            if(svcExists){
-                println("Removing ${svcName} svc");
-                sh "kubectl delete svc ${svcName}"
-            }
-            sh "kubectl apply -f k3s/service.yml"
+            Integer svcCount = temp.trim().toInteger()
+            boolean svcExists = svcCount > 0;
+            println("temp: ${temp}, svcCount: ${svcCount}, svcExists: ${svcExists}")
+//             if(svcExists){
+//                 println("Removing ${svcName} svc");
+//                 sh "kubectl delete svc ${svcName}"
+//             }
+//             sh "kubectl apply -f k3s/service.yml"
         }
     }
 }
