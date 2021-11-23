@@ -40,14 +40,14 @@ node("kube2"){
     stage("Create Secret"){
         if(k3sBuild){
             withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
-                k3sSecret(secretName:"mysql-pass", credPw: "${credPw}")
+                k3sSecret secretName:"mysql-pass", credPw: "${credPw}"
             }
         }
     }
 
     stage("Create Deployment"){
         if(k3sBuild){
-            k3sDeployment(deploymentName: "wedding-rsvp-registry")
+            k3sDeployment deploymentName: "wedding-rsvp-registry"
         }
     }
 
