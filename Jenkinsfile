@@ -3,9 +3,9 @@ node("kube2"){
     println("DOCKER_BUILD: ${env.DOCKER_BUILD}")
     println("K3S_BUILD: ${env.K3S_BUILD}")
 
-    boolean buildAndTest = env.REPO_BUILD_TEST
-    boolean dockerBuild = env.DOCKER_BUILD
-    boolean k3sBuild = env.K3S_BUILD
+    boolean buildAndTest = env.REPO_BUILD_TEST.toBoolean()
+    boolean dockerBuild = env.DOCKER_BUILD.toBoolean()
+    boolean k3sBuild = env.K3S_BUILD.toBoolean()
 
     println("buildAndTest: ${buildAndTest}")
     println("dockerBuild: ${dockerBuild}")
