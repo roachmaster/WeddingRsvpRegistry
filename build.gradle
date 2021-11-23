@@ -60,7 +60,6 @@ task integrationTest(type: Test){
 	description = 'Runs the integration tests.'
 	group = 'verification'
 	environment("SPRING_DATASOURCE_PASSWORD",SPRING_DATASOURCE_PASSWORD)
-	systemProperties project.properties.subMap(['spring.datasource.password'])
 	testClassesDirs = sourceSets.integration.output.classesDirs
 	classpath = sourceSets.integration.runtimeClasspath
 	outputs.upToDateWhen { false }
