@@ -55,8 +55,9 @@ node("kube2"){
             withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
                 String secretName = "mysql-pass"
                 String temp = sh(returnStatus: true, script: "kubectl get secrets | grep -c ${secretName}")
-                if(temp.trim().equals("0")){
-                    println("Adding Secret because count was ${temp}");
+                boolean secretExists = temp.trim().toBoolean()
+                if(secretExists){
+                    println("Adding Secret because count was ${temp} so secret exists is ${secretExists}");
                     sh "kubectl create secret generic ${secretName} --from-literal=password=${credPw}"
                 }
             }
