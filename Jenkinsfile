@@ -1,15 +1,7 @@
 node("kube2"){
-    println("REPO_BUILD_TEST: ${env.REPO_BUILD_TEST}")
-    println("DOCKER_BUILD: ${env.DOCKER_BUILD}")
-    println("K3S_BUILD: ${env.K3S_BUILD}")
-
     boolean buildAndTest = env.REPO_BUILD_TEST.toBoolean()
     boolean dockerBuild = env.DOCKER_BUILD.toBoolean()
     boolean k3sBuild = env.K3S_BUILD.toBoolean()
-
-    println("buildAndTest: ${buildAndTest}")
-    println("dockerBuild: ${dockerBuild}")
-    println("k3sBuild: ${k3sBuild}")
 
     stage("clone"){
         git 'git@github.com:roachmaster/WeddingRsvpRegistry.git'
@@ -41,7 +33,7 @@ node("kube2"){
                 def dockerImage = "wedding-rsvp-registry"
                 def dockerVersion = "0.0.1-SNAPSHOT"
                 def dockerName = "${DOCKER_USERNAME}/${dockerImage}:${dockerVersion}"
-                def dockerOpt = "--build-arg mariaPw=${credPw}"
+                def dockerOpt = "--build-arg JAR_FILE=build/libs/${dockerImage}-${dockerVersion}.jar"
                 sh "docker build ${dockerOpt} -t ${dockerName} ."
                 sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
                 sh "docker push ${dockerName}"
@@ -54,8 +46,8 @@ node("kube2"){
         if(k3sBuild){
             withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
                 String secretName = "mysql-pass"
-                String temp = sh(returnStdout: true, script: "kubectl get secrets").trim()
-                if(temp.count(secretName) == 0){
+                String ksecrets = sh(returnStdout: true, script: "kubectl get secrets").trim()
+                if(ksecrets.count(secretName) == 0){
                     sh "kubectl create secret generic ${secretName} --from-literal=password=${credPw}"
                 }
             }
@@ -65,8 +57,8 @@ node("kube2"){
     stage("Create Deployment"){
         if(k3sBuild){
             String deploymentName = "wedding-rsvp-registry"
-            String temp = sh(returnStdout: true, script: "kubectl get deployments").trim()
-            if(temp.count(deploymentName) > 0){
+            String kdeployments = sh(returnStdout: true, script: "kubectl get deployments").trim()
+            if(kdeployments.count(deploymentName) > 0){
                 sh "kubectl delete deployment ${deploymentName}"
             }
             sh "kubectl create -f k3s/deployment.yml"
@@ -76,8 +68,8 @@ node("kube2"){
     stage("Create Service"){
         if(k3sBuild){
             String svcName = "wedding-rsvp-registry"
-            String temp = sh(returnStdout: true, script: "kubectl get svc").trim()
-            if(temp.count(svcName) > 0){
+            String ksvc = sh(returnStdout: true, script: "kubectl get svc").trim()
+            if(ksvc.count(svcName) > 0){
                 sh "kubectl delete svc ${svcName}"
             }
             sh "kubectl apply -f k3s/service.yml"
