@@ -30,10 +30,11 @@ node("kube2"){
         if(buildAndTest && dockerBuild){
             withCredentials([usernamePassword(credentialsId: '87e61f11-079d-4052-b083-ea5859f0f85b', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME'),
                              usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
+                def appName = "weddingRsvpRegistry"
                 def dockerImage = "wedding-rsvp-registry"
                 def dockerVersion = "0.0.1-SNAPSHOT"
                 def dockerName = "${DOCKER_USERNAME}/${dockerImage}:${dockerVersion}"
-                def dockerOpt = "--build-arg JAR_FILE=build/libs/${dockerImage}-${dockerVersion}.jar"
+                def dockerOpt = "--build-arg JAR_FILE=build/libs/${appName}-${dockerVersion}.jar"
                 sh "docker build ${dockerOpt} -t ${dockerName} ."
                 sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
                 sh "docker push ${dockerName}"
