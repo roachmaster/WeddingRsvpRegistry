@@ -32,16 +32,10 @@ node("kube2"){
                 def appName = "weddingRsvpRegistry"
                 def dockerImage = "wedding-rsvp-registry"
                 def dockerVersion = "0.0.1-SNAPSHOT"
-                def dockerName = "${DOCKER_USERNAME}/${dockerImage}:${dockerVersion}"
-                def dockerOpt = "--build-arg JAR_FILE=build/libs/${appName}-${dockerVersion}.jar"
-                dockerBuild([dockerName:"${DOCKER_USERNAME}/${dockerImage}:${dockerVersion}",
+                dockerBuild(dockerName:"${DOCKER_USERNAME}/${dockerImage}:${dockerVersion}",
                              dockerOpt:"--build-arg JAR_FILE=build/libs/${appName}-${dockerVersion}.jar",
                              DOCKER_PASSWORD: "${DOCKER_PASSWORD}",
-                             DOCKER_USERNAME:"${DOCKER_USERNAME}"])
-//                 sh "docker build ${dockerOpt} -t ${dockerName} ."
-//                 sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
-//                 sh "docker push ${dockerName}"
-//                 sh "docker rmi ${dockerName}"
+                             DOCKER_USERNAME:"${DOCKER_USERNAME}")
             }
         }
     }
