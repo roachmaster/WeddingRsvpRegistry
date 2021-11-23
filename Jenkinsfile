@@ -33,7 +33,8 @@ node("kube2"){
 
     stage("Create Secret"){
         withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
-            if(sh(returnStatus: true, script: 'kubectl get secrets | grep -c mysql-pass').trim().equals("1")){
+            def temp = sh(returnStatus: true, script: 'kubectl get secrets | grep -c mysql-pass')
+            if(temp.trim().equals("1")){
                 println("Adding Secret");
                 sh "kubectl create secret generic mysql-pass --from-literal=password=${credPw}"
             }
@@ -41,7 +42,8 @@ node("kube2"){
     }
 
     stage("Create Deployment"){
-        if(!sh(returnStatus: true, script: 'kubectl get deployments | grep -c wedding-rsvp-registry').trim().equals("1")){
+        def temp = sh(returnStatus: true, script: 'kubectl get deployments | grep -c wedding-rsvp-registry')
+        if(!temp.trim().equals("1")){
             println("Removing wedding-rsvp-registry deployment");
             sh "kubectl delete deployment wedding-rsvp-registry"
         }
@@ -49,7 +51,8 @@ node("kube2"){
     }
 
     stage("Create Service"){
-        if(!sh(returnStatus: true, script: 'kubectl get svc | grep -c wedding-rsvp-registry').trim().equals("1")){
+        def temp = sh(returnStatus: true, script: 'kubectl get svc | grep -c wedding-rsvp-registry')
+        if(!temp.trim().equals("1")){
             println("Removing wedding-rsvp-registry svc");
             sh "kubectl delete svc wedding-rsvp-registry"
         }
