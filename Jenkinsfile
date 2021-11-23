@@ -54,7 +54,7 @@ node("kube2"){
         if(k3sBuild){
             withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
                 String secretName = "mysql-pass"
-                String temp = sh(returnStatus: true, script: "kubectl get secrets").trim()
+                String temp = sh(returnStdout: true, script: "kubectl get secrets").trim()
                 Integer secretCount = temp.count(secretName)
                 boolean secretExists = secretCount > 0;
                 println("temp: ${temp}, secretCount: ${secretCount}, secretExists: ${secretExists}")
@@ -69,7 +69,7 @@ node("kube2"){
     stage("Create Deployment"){
         if(k3sBuild){
             String deploymentName = "wedding-rsvp-registry"
-            String temp = sh(returnStatus: true, script: "kubectl get deployments").trim()
+            String temp = sh(returnStdout: true, script: "kubectl get deployments").trim()
             Integer deploymentCount = temp.count(deploymentName)
             boolean deploymentExists = deploymentCount > 0;
             println("temp: ${temp}, deploymentCount: ${deploymentCount}, deploymentExists: ${deploymentExists}")
@@ -84,7 +84,7 @@ node("kube2"){
     stage("Create Service"){
         if(k3sBuild){
             String svcName = "wedding-rsvp-registry"
-            String temp = sh(returnStatus: true, script: "kubectl get svc")
+            String temp = sh(returnStdout: true, script: "kubectl get svc")
             Integer svcCount = temp.count(svcName)
             boolean svcExists = svcCount > 0;
             println("temp: ${temp}, svcCount: ${svcCount}, svcExists: ${svcExists}")
