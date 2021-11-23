@@ -42,7 +42,7 @@ node("kube2"){
     }
 
     stage("Create Deployment"){
-        String temp = sh(returnStatus: true, script: 'kubectl get deployments | grep -c wedding-rsvp-registry').trim()
+        String temp = sh(returnStatus: true, script: 'kubectl get deployments | grep -c wedding-rsvp-registry')
         if(!temp.trim().equals(1)){
             println("Removing wedding-rsvp-registry deployment");
             sh "kubectl delete deployment wedding-rsvp-registry"
@@ -51,7 +51,7 @@ node("kube2"){
     }
 
     stage("Create Service"){
-        String temp = sh(returnStatus: true, script: 'kubectl get svc | grep -c wedding-rsvp-registry').trim()
+        String temp = sh(returnStatus: true, script: 'kubectl get svc | grep -c wedding-rsvp-registry')
         if(!temp.trim().equals(1)){
             println("Removing wedding-rsvp-registry svc");
             sh "kubectl delete svc wedding-rsvp-registry"
