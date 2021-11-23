@@ -34,8 +34,8 @@ node("kube2"){
     stage("Create Secret"){
         withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
             String secretName = "mysql-pass"
-            String temp = sh(returnStatus: true, script: "kubectl get secrets | grep -c ${secretName}")
-            if(!temp.trim().equals("1")){
+            def temp = sh(returnStatus: true, script: "kubectl get secrets | grep -c ${secretName}")
+            if(temp.equals(0)){
                 println("Adding Secret");
                 sh "kubectl create secret generic ${secretName} --from-literal=password=${credPw}"
             }
@@ -44,8 +44,8 @@ node("kube2"){
 
     stage("Create Deployment"){
         String deploymentName = "wedding-rsvp-registry"
-        String temp = sh(returnStatus: true, script: "kubectl get deployments | grep -c ${deploymentName}")
-        if(!temp.trim().equals("1")){
+        def temp = sh(returnStatus: true, script: "kubectl get deployments | grep -c ${deploymentName}")
+        if(temp.equals(1)){
             println("Removing ${deploymentName} deployment");
             sh "kubectl delete deployment ${deploymentName}"
         }
@@ -54,8 +54,8 @@ node("kube2"){
 
     stage("Create Service"){
         String svcName = "wedding-rsvp-registry"
-        String temp = sh(returnStatus: true, script: "kubectl get svc | grep -c ${svcName}")
-        if(!temp.trim().equals("1")){
+        def temp = sh(returnStatus: true, script: "kubectl get svc | grep -c ${svcName}")
+        if(temp.equals(1)){
             println("Removing ${svcName} svc");
             sh "kubectl delete svc ${svcName}"
         }
