@@ -53,7 +53,7 @@ node("kube2"){
 
     stage("Create Service"){
         if(k3sBuild){
-            k3sDeployment svcName: "wedding-rsvp-registry"
+            k3sService svcName: "wedding-rsvp-registry"
         }
     }
 }
