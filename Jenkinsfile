@@ -33,28 +33,31 @@ node("kube2"){
 
     stage("Create Secret"){
         withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
-            String temp = sh(returnStatus: true, script: 'kubectl get secrets | grep -c mysql-pass')
-            if(!temp.trim().equals(1)){
+            String secretName = "mysql-pass"
+            String temp = sh(returnStatus: true, script: "kubectl get secrets | grep -c ${secretName}")
+            if(!temp.trim().equals("1")){
                 println("Adding Secret");
-                sh "kubectl create secret generic mysql-pass --from-literal=password=${credPw}"
+                sh "kubectl create secret generic ${secretName} --from-literal=password=${credPw}"
             }
         }
     }
 
     stage("Create Deployment"){
-        String temp = sh(returnStatus: true, script: 'kubectl get deployments | grep -c wedding-rsvp-registry')
-        if(!temp.trim().equals(1)){
-            println("Removing wedding-rsvp-registry deployment");
-            sh "kubectl delete deployment wedding-rsvp-registry"
+        String deploymentName = "wedding-rsvp-registry"
+        String temp = sh(returnStatus: true, script: "kubectl get deployments | grep -c ${deploymentName}")
+        if(!temp.trim().equals("1")){
+            println("Removing ${deploymentName} deployment");
+            sh "kubectl delete deployment ${deploymentName}"
         }
         sh "kubectl create -f k3s/deployment.yml"
     }
 
     stage("Create Service"){
-        String temp = sh(returnStatus: true, script: 'kubectl get svc | grep -c wedding-rsvp-registry')
-        if(!temp.trim().equals(1)){
-            println("Removing wedding-rsvp-registry svc");
-            sh "kubectl delete svc wedding-rsvp-registry"
+        String svcName = "wedding-rsvp-registry"
+        String temp = sh(returnStatus: true, script: "kubectl get svc | grep -c ${svcName}")
+        if(!temp.trim().equals("1")){
+            println("Removing ${svcName} svc");
+            sh "kubectl delete svc ${svcName}"
         }
         sh "kubectl apply -f k3s/service.yml"
     }
