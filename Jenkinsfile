@@ -68,7 +68,8 @@ node("kube2"){
         if(k3sBuild){
             String deploymentName = "wedding-rsvp-registry"
             String temp = sh(returnStatus: true, script: "kubectl get deployments | grep -c ${deploymentName}")
-            if(temp.trim().equals("1")){
+            boolean deploymentExists = temp.trim().toBoolean()
+            if(deploymentExists){
                 println("Removing ${deploymentName} deployment");
                 sh "kubectl delete deployment ${deploymentName}"
             }
@@ -80,7 +81,8 @@ node("kube2"){
         if(k3sBuild){
             String svcName = "wedding-rsvp-registry"
             String temp = sh(returnStatus: true, script: "kubectl get svc | grep -c ${svcName}")
-            if(temp.trim().equals("1")){
+            boolean svcExists = temp.trim().toBoolean()
+            if(svcExists){
                 println("Removing ${svcName} svc");
                 sh "kubectl delete svc ${svcName}"
             }
