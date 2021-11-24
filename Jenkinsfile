@@ -16,12 +16,14 @@ node("kube2"){
     stage("unit test"){
         if(runBuildAndTest){
             sh "./gradlew clean build test -x integrationTest --info"
+            junit 'build/test-results/**/*.xml'
         }
     }
 
     stage("Integration Test"){
         if(runBuildAndTest){
             sh "./gradlew integrationTest --info"  //SPRING_DATASOURCE_PASSWORD stored in ~/.gradle/init.d/spring.gradle
+            junit 'build/test-results/**/*.xml'
         }
     }
 

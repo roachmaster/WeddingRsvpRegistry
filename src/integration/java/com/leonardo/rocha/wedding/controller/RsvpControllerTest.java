@@ -38,7 +38,7 @@ public class RsvpControllerTest {
     public void setUp() throws Exception {
         cut.deleteGuests();
     }
-    
+
     @Test
     public void creatingGuestInviteTest(){
         String name = "Emily";
