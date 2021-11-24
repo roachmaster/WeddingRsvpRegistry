@@ -65,5 +65,12 @@ node {
          println podInfo
          def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
          println podInfoList.toString()
+         def podName = podInfoList.get(0)
+         println "podName ${podName}"
+         def readyStatus = podInfoList.get(1)
+         println "readyStatus ${readyStatus}"
+         def runningStatus = podInfoList.get(2)
+         println "runningStatus ${runningStatus}"
+
     }
 }
