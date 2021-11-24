@@ -70,8 +70,15 @@ node {
          println "readyStatus: ${readyStatus}"
          def readyStatusArray = readyStatus.tokenize('/')
          println readyStatusArray
-         String runningStatus = podInfoList.get(2)
-         println "runningStatus: ${runningStatus}"
-
+         for(int i = 0; i < 10; i++){
+             if(readyStatusArray[0] != readyStatusArray[1]){
+                 sleep 30
+                 podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
+                 podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
+                 readyStatus = podInfoList.get(1)
+                 readyStatusArray = readyStatus.tokenize('/')
+             }
+         }
+         println("${podName} is ready for testing")
     }
 }
