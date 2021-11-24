@@ -62,6 +62,7 @@ node {
     stage("Run Acceptance Test"){
         String containerName = "wedding-rsvp-registry"
         String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
-        println podInfo
+        def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
+        println podInfoList.toString()
     }
 }
