@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ResponseEntityHelper {
     public static ResponseEntity<List<Guest>> getGuests(GuestDB guestDao){
@@ -40,6 +41,10 @@ public class ResponseEntityHelper {
     }
 
     public static ResponseEntity<Guest> updateGuest(GuestDB guestDao, String name, boolean going, int confirmedGuest){
+        Guest guest = guestDao.updateGuest(name, going,confirmedGuest);
+        if(Objects.isNull(guest)){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(guestDao.updateGuest(name, going,confirmedGuest), HttpStatus.OK);
     }
 
