@@ -28,7 +28,7 @@ node("kube2"){
     stage("Docker Build"){
         if(runBuildAndTest && runDockerBuild){
             withCredentials([usernamePassword(credentialsId: '87e61f11-079d-4052-b083-ea5859f0f85b', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                def dockerVersion = sh(returnStdout: true, script: "gradle properties -q --no-daemon --console=plain -q | grep '^version:' | awk '{print \$2}'").trim()
+                def dockerVersion = sh(returnStdout: true, script: "./gradlew properties -q --no-daemon --console=plain -q | grep '^version:' | awk '{print \$2}'").trim()
                 dockerBuild(dockerName:"${DOCKER_USERNAME}/wedding-rsvp-registry:${dockerVersion}",
                             dockerOpt:"--build-arg JAR_FILE=build/libs/weddingRsvpRegistry-${dockerVersion}.jar",
                             DOCKER_PASSWORD: "${DOCKER_PASSWORD}",
