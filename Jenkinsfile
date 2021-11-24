@@ -63,6 +63,11 @@ node {
         String containerName = "wedding-rsvp-registry"
         String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
         def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
-        println podInfoList.toString()
+        String podName = podInfoList.get(0)
+        println "podName ${podName}"
+        List<String> readyStatus = new ArrayList<String>(podInfoList.get(1).split('\\'))
+        println "ready ${readyStatus}"
+        String runningStatus = podInfoList.get(2)
+        println "runningStatus ${runningStatus}"
     }
 }
