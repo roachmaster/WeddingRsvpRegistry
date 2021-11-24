@@ -68,8 +68,8 @@ node {
          println "podName: ${podName}"
          String readyStatus = podInfoList.get(1)
          println "readyStatus: ${readyStatus}"
-         String[] readyStatusArray = readyStatus.split(/\//)
-         println readyStatusArray[0] + " / " readyStatusArray[1]
+         def readyStatusArray = readyStatus.tokenize('/')
+         println readyStatusArray
          String runningStatus = podInfoList.get(2)
          println "runningStatus: ${runningStatus}"
 
