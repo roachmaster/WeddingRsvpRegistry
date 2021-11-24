@@ -65,7 +65,7 @@ node {
         def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
         String podName = podInfoList.get(0)
         println "podName ${podName}"
-        List<String> readyStatus = new ArrayList<String>(podInfoList.get(1).split('\\'))
+        List<String> readyStatus = new ArrayList<String>(podInfoList.get(1).split('/'))
         println "ready ${readyStatus}"
         String runningStatus = podInfoList.get(2)
         println "runningStatus ${runningStatus}"
