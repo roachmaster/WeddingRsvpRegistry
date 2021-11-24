@@ -6,8 +6,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
-
 @Entity
 @Table(name = "guest_tbl")
 public class Guest {

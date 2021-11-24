@@ -3,6 +3,7 @@ package com.leonardo.rocha.wedding.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.leonardo.rocha.wedding.data.DeleteAllResponse;
+import com.leonardo.rocha.wedding.data.DeleteGuestResponse;
 import com.leonardo.rocha.wedding.data.Guest;
 import org.junit.After;
 import org.junit.Before;
@@ -37,12 +38,7 @@ public class RsvpControllerTest {
     public void setUp() throws Exception {
         cut.deleteGuests();
     }
-
-    @After
-    public void tearDown() throws Exception {
-        cut.deleteGuests();
-    }
-
+    
     @Test
     public void creatingGuestInviteTest(){
         String name = "Emily";
@@ -75,7 +71,7 @@ public class RsvpControllerTest {
     }
 
     @Test
-    public void deleteUsers(){
+    public void deleteGuests(){
         getGuestsTest();
         assertGetGuestsResponse(cut.getGuests());
         ResponseEntity<DeleteAllResponse> deleteGuestsResponse = cut.deleteGuests();
@@ -83,6 +79,25 @@ public class RsvpControllerTest {
         DeleteAllResponse response = deleteGuestsResponse.getBody();
         assert response != null;
         assertEquals(0, response.getNumOfGuests());
+    }
+
+    @Test
+    public void deleteGuest() throws JsonProcessingException {
+        getGuestsTest();
+        assertGetGuestsResponse(cut.getGuests());
+
+        ResponseEntity<DeleteGuestResponse> deleteGuestsResponse = cut.deleteGuest("Leo");
+        assertEquals(HttpStatus.OK, deleteGuestsResponse.getStatusCode());
+        DeleteGuestResponse response = deleteGuestsResponse.getBody();
+        assert response != null;
+        assertEquals(1, response.getNumOfGuestsDeleted());
+
+        ResponseEntity<Guest> deletedGuest = cut.getGuest("Leo");
+        assert deletedGuest != null;
+        assert deletedGuest.getBody() == null;
+
+        logger.info(prettyPrint(response));
+
     }
 
     @Test

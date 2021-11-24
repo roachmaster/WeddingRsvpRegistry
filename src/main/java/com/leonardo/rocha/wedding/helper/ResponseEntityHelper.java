@@ -1,6 +1,7 @@
 package com.leonardo.rocha.wedding.helper;
 
 import com.leonardo.rocha.wedding.data.DeleteAllResponse;
+import com.leonardo.rocha.wedding.data.DeleteGuestResponse;
 import com.leonardo.rocha.wedding.data.Guest;
 import com.leonardo.rocha.wedding.service.GuestDB;
 import org.springframework.http.HttpStatus;
@@ -40,5 +41,13 @@ public class ResponseEntityHelper {
 
     public static ResponseEntity<Guest> updateGuest(GuestDB guestDao, String name, boolean going, int confirmedGuest){
         return new ResponseEntity<>(guestDao.updateGuest(name, going,confirmedGuest), HttpStatus.OK);
+    }
+
+    public static ResponseEntity<DeleteGuestResponse> deleteGuest(GuestDB guestDao, String name) {
+        DeleteGuestResponse response = new DeleteGuestResponse();
+        long numOfDeletedGuest = guestDao.deleteGuest(name);
+        response.setNumOfGuestsDeleted(numOfDeletedGuest);
+        response.setDescription("Deleting Guests with name: " + name);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

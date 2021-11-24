@@ -81,6 +81,14 @@ public class GuestDBTest {
         assert expectedSize == guestsSize;
     }
 
+    @Test
+    public void deleteGuest(){
+        long expectedSize = 1;
+        when(guestRepository.deleteByName(anyString())).thenReturn(1L);
+        long numOfDeletedGuests = uut.deleteGuest(TEST_GUEST_NAME);
+        assert expectedSize == numOfDeletedGuests;
+    }
+
     private List<Guest> getTestGuestListOf(int size) {
         List<Guest> guestList = new ArrayList<>(size);
         for(int i = 0; i < size; i++){

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.StreamSupport;
@@ -56,6 +57,11 @@ public class GuestDB {
         this.guestRepository.deleteAll();
         Iterable<Guest> guests = this.guestRepository.findAll();
         return getNumberOfGuests(guests);
+    }
+
+    @Transactional
+    public long deleteGuest(String name){
+        return this.guestRepository.deleteByName(name);
     }
 
     public static long getNumberOfGuests(Iterable<Guest> guests) {

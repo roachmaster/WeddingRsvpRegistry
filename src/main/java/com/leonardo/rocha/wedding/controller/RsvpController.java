@@ -1,6 +1,7 @@
 package com.leonardo.rocha.wedding.controller;
 
 import com.leonardo.rocha.wedding.data.DeleteAllResponse;
+import com.leonardo.rocha.wedding.data.DeleteGuestResponse;
 import com.leonardo.rocha.wedding.data.Guest;
 import com.leonardo.rocha.wedding.helper.ResponseEntityHelper;
 import com.leonardo.rocha.wedding.service.GuestDB;
@@ -47,6 +48,12 @@ public class RsvpController {
 	public ResponseEntity<DeleteAllResponse> deleteGuests() {
 		logger.info("Deleting Guests");
 		return ResponseEntityHelper.deleteGuests(this.guestDao);
+	}
+
+	@RequestMapping(value = "guest/delete/{name}", method = RequestMethod.DELETE)
+	public ResponseEntity<DeleteGuestResponse> deleteGuest(@PathVariable String name){
+		logger.info("Deleting Guests with name: {}", name);
+		return ResponseEntityHelper.deleteGuest(this.guestDao, name);
 	}
 
 	@RequestMapping(value = "guest/update/name/{name}/going/{going}/confirmedGuest/{confirmedGuest}", method = RequestMethod.POST)
