@@ -3,17 +3,17 @@ node {
     boolean runDockerBuild = env.DOCKER_BUILD.toBoolean()
     boolean k3sBuild = env.K3S_BUILD.toBoolean()
 
-    stage("clone"){
+    stage("Clone"){
         git 'git@github.com:roachmaster/WeddingRsvpRegistry.git'
     }
 
-    stage("build"){
+    stage("Build"){
         if(runBuildAndTest){
             sh "./gradlew clean build -x test -x integrationTest --info"
         }
     }
 
-    stage("unit test"){
+    stage("Run Unit Test"){
         if(runBuildAndTest){
             sh "./gradlew clean build test -x integrationTest --info"
             junit 'build/test-results/**/*.xml'
@@ -57,5 +57,11 @@ node {
         if(k3sBuild){
             k3sService name: "wedding-rsvp-registry"
         }
+    }
+
+    stage("Run Acceptance Test"){
+        String containerName = "wedding-rsvp-registry"
+        String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
+        println podInfo
     }
 }
