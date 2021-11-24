@@ -1,4 +1,4 @@
-node("kube3"){
+node {
     boolean runBuildAndTest = env.REPO_BUILD_TEST.toBoolean()
     boolean runDockerBuild = env.DOCKER_BUILD.toBoolean()
     boolean k3sBuild = env.K3S_BUILD.toBoolean()
