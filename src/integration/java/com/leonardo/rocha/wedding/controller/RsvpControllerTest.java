@@ -1,5 +1,7 @@
 package com.leonardo.rocha.wedding.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.leonardo.rocha.wedding.data.DeleteAllResponse;
 import com.leonardo.rocha.wedding.data.Guest;
 import org.junit.After;
@@ -27,6 +29,9 @@ public class RsvpControllerTest {
 
     @Autowired
     RsvpController cut;
+
+    @Autowired
+    ObjectWriter objectWriter;
 
     @Before
     public void setUp() throws Exception {
@@ -86,16 +91,20 @@ public class RsvpControllerTest {
     }
 
     @Test
-    public void integrationTest(){
+    public void integrationTest() throws JsonProcessingException {
         ResponseEntity<Guest> createResponse = cut.createGuest("Leo", 5);
-        logger.info(Objects.requireNonNull(createResponse.getBody()).toString());
+        logger.info(prettyPrint(createResponse.getBody()));
         ResponseEntity<Guest> createResponse1 = cut.createGuest("Emily", 6);
-        logger.info(Objects.requireNonNull(createResponse1.getBody()).toString());
+        logger.info(prettyPrint(createResponse1.getBody()));
         ResponseEntity<Guest> getResponse = cut.getGuest("Leo");
-        logger.info(Objects.requireNonNull(getResponse.getBody()).toString());
+        logger.info(prettyPrint(getResponse.getBody()));
         ResponseEntity<List<Guest>> response = cut.getGuests();
-        logger.info(Objects.requireNonNull(response.getBody()).toString());
+        logger.info(prettyPrint(response.getBody()));
         ResponseEntity<Guest> updateResponse = cut.updateGuest("Leo",true, 5);
-        logger.info(Objects.requireNonNull(updateResponse.getBody()).toString());
+        logger.info(prettyPrint(updateResponse.getBody()));
+    }
+
+    private String prettyPrint(Object obj) throws JsonProcessingException {
+        return objectWriter.writeValueAsString(Objects.requireNonNull(obj));
     }
 }
