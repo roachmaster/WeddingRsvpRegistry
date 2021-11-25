@@ -72,7 +72,8 @@ node {
 
         println "isReady: ${isReady}"
         println "${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts"
-        while(!isReady && maxAttemptsTried){
+        println "maxAttemptsTried: ${maxAttemptsTried}"
+        while(!isReady && !maxAttemptsTried){
             String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
             def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
             println podInfoList.toString()
