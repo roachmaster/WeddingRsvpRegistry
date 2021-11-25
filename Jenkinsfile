@@ -89,6 +89,7 @@ node {
                 maxAttemptsTried = true;
                 println "isReady: ${isReady}"
                 println "${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts"
+                println "maxAttemptsTried: ${maxAttemptsTried}"
             }else {
                 if(numOfReadinessChecks == MAX_NUM_OF_CHECKS){
                     maxAttemptsTried = true
@@ -98,9 +99,9 @@ node {
                 }
                 println "isReady: ${isReady}"
                 println "${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts"
+                println "maxAttemptsTried: ${maxAttemptsTried}"
             }
         }
         println("${podName} is ready for testing")
-
     }
 }
