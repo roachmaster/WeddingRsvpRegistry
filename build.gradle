@@ -18,17 +18,21 @@ dependencies {
 	implementation group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
 	implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
 
-	implementation "org.mariadb.jdbc:mariadb-java-client:1.5.7"
-	implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-	implementation "org.springframework.boot:spring-boot-starter-actuator"
+	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.3'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.5.6'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator:2.5.6'
 
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter:2.5.6'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux:2.5.6'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.6'
+	testImplementation 'junit:junit:4.13.2'
 
-	implementation('org.springframework.boot:spring-boot-starter-web')
-	implementation('org.apache.commons:commons-lang3:3.7')
-	testImplementation('org.springframework.boot:spring-boot-starter-test:2.2.4.RELEASE')
+	implementation('org.springframework.boot:spring-boot-starter-web:2.5.6')
+	implementation('org.apache.commons:commons-lang3:3.12.0')
+	testImplementation('org.springframework.boot:spring-boot-starter-test:2.5.6')
+	testImplementation("io.cucumber:cucumber-java:7.0.0")
+	testImplementation("io.cucumber:cucumber-spring:7.0.0")
+	testImplementation("io.cucumber:cucumber-junit:7.0.0")
 }
 
 test {
@@ -37,8 +41,11 @@ test {
 
 sourceSets{
 	integration {
-		java.srcDir("${projectDir}/src/integration/java")
-		resources.srcDir("${projectDir}/src/integration/resources")
+		compileClasspath += main.output + test.output
+		runtimeClasspath += main.output + test.output
+	}
+
+	acceptance {
 		compileClasspath += main.output + test.output
 		runtimeClasspath += main.output + test.output
 	}
@@ -47,13 +54,16 @@ sourceSets{
 configurations {
 	integrationImplementation.extendsFrom(testImplementation)
 	integrationRunetime.extendsFrom(testRuntime)
+	acceptanceImplementation.extendsFrom(testImplementation)
+	acceptanceRunetime.extendsFrom(testRuntime)
 }
 
 idea {
 	module {
 		testSourceDirs += sourceSets.integration.java.srcDirs
-		testResourceDirs += sourceSets.integration.resources.srcDirs
 		scopes.TEST.plus += [ configurations.integrationCompileClasspath ]
+		testSourceDirs += sourceSets.acceptance.java.srcDirs
+		scopes.TEST.plus += [ configurations.acceptanceCompileClasspath ]
 	}
 }
 
@@ -67,3 +77,14 @@ task integrationTest(type: Test){
 }
 
 check.dependsOn(integrationTest)
+
+task acceptanceTest(type: Test){
+	description = 'Runs the acceptance tests.'
+	group = 'verification'
+	environment("SPRING_DATASOURCE_PASSWORD",SPRING_DATASOURCE_PASSWORD)
+	testClassesDirs = sourceSets.acceptance.output.classesDirs
+	classpath = sourceSets.acceptance.runtimeClasspath
+	outputs.upToDateWhen { false }
+}
+
+check.dependsOn(acceptanceTest)

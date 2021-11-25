@@ -61,5 +61,6 @@ node {
 
     stage("Run Acceptance Test"){
         waitForPodToBeReady name:"wedding-rsvp-registry", maxNumOfAttempts: 30
+        sh "./gradlew acceptanceTest --info"
     }
 }
