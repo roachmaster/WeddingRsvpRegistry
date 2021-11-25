@@ -60,10 +60,11 @@ node {
     }
 
     stage("Run Acceptance Test"){
-        String containerName = "wedding-rsvp-registry"
+        def config = [:]
+        config.name = "wedding-rsvp-registry"
 
         int numOfReadinessChecks = 0;
-        int MAX_NUM_OF_CHECKS = 5;
+        int MAX_NUM_OF_CHECKS = 2;
 
         boolean maxAttemptsTried = false
         boolean isReady = false;
@@ -72,7 +73,7 @@ node {
         String podName = "POD NOT FOUND"
 
         while(!isReady && !maxAttemptsTried){
-            String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
+            String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${config.name}").trim().split("\\s+")
             def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
             podName = podInfoList.get(0)
             String readyStatus = podInfoList.get(1)
