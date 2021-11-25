@@ -63,7 +63,7 @@ node {
         String containerName = "wedding-rsvp-registry"
 
         int numOfReadinessChecks = 0;
-        int MAX_NUM_OF_CHECKS = 10;
+        int MAX_NUM_OF_CHECKS = 20;
 
         boolean maxAttemptsTried = false
         boolean isReady = false;
@@ -94,7 +94,7 @@ node {
                     maxAttemptsTried = true
                 }else{
                     numOfReadinessChecks++;
-                    sleep 45
+                    sleep 15
                 }
                 println '''
                     isReady: ${isReady}
