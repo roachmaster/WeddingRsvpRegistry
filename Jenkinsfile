@@ -61,24 +61,28 @@ node {
 
     stage("Run Acceptance Test"){
         String containerName = "wedding-rsvp-registry"
-         String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
-         def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
-         println podInfoList.toString()
-         String podName = podInfoList.get(0)
-         println "podName: ${podName}"
-         String readyStatus = podInfoList.get(1)
-         println "readyStatus: ${readyStatus}"
-         def readyStatusArray = readyStatus.tokenize('/')
-         println readyStatusArray
-         for(int i = 0; i < 10; i++){
-             if(readyStatusArray[0] != readyStatusArray[1]){
-                 sleep 30
-                 podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
-                 podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
-                 readyStatus = podInfoList.get(1)
-                 readyStatusArray = readyStatus.tokenize('/')
-             }
-         }
-         println("${podName} is ready for testing")
+
+        int numOfReadinessChecks = 0;
+        int MAX_NUM_OF_CHECKS = 10;
+        do {
+            String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
+
+            println podInfoList.toString()
+            String podName = podInfoList.get(0)
+            println "podName: ${podName}"
+            String readyStatus = podInfoList.get(1)
+            println "readyStatus: ${readyStatus}"
+            def readyStatusTuple = readyStatus.tokenize('/')
+            println readyStatusTuple
+
+            if(readyStatusTuple[0] == readyStatusTuple[1]){
+                continue
+            } else {
+                numOfReadinessChecks++;
+            }
+
+        } while(numOfReadinessChecks < MAX_NUM_OF_CHECKS);
+        println("${podName} is ready for testing")
+
     }
 }
