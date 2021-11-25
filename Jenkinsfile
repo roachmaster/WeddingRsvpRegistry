@@ -68,8 +68,8 @@ node {
 
         boolean maxAttemptsTried = false
         boolean isReady = false;
-        config.hasFailed = false;
-        config.podName = "POD NOT FOUND"
+        def hasFailed = false;
+        def podName = "POD NOT FOUND"
 
         while(!isReady && !maxAttemptsTried){
             String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${config.name}").trim().split("\\s+")
@@ -81,7 +81,7 @@ node {
             if(readyStatusPair[0] == readyStatusPair[1]){
                 isReady = true;
                 maxAttemptsTried = true;
-                println "podName: ${config.podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
+                println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
             }else {
                 if(numOfReadinessChecks == MAX_NUM_OF_CHECKS){
                     isReady = true;
@@ -91,13 +91,13 @@ node {
                     numOfReadinessChecks++;
                     sleep 15
                 }
-                println "podName: ${config.podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
+                println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
             }
         }
         if(config.hasFailed){
-            error "${config.podName} is has failed to start within time frame"
+            error "${podName} is has failed to start within time frame"
         }else {
-            println("${config.podName} is ready for testing")
+            println("${podName} is ready for testing")
         }
     }
 }
