@@ -62,15 +62,14 @@ node {
     stage("Run Acceptance Test"){
         def config = [:]
         config.name = "wedding-rsvp-registry"
-
-        int numOfReadinessChecks = 0;
-        int MAX_NUM_OF_CHECKS = 2;
+        config.maxNumOfAttempts = 2;
 
         boolean maxAttemptsTried = false
         boolean isReady = false;
         def hasFailed = false;
         def podName = "POD NOT FOUND"
 
+        def currentNumOfReadinessChecks = 0;
         while(!isReady && !maxAttemptsTried){
             String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${config.name}").trim().split("\\s+")
             def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
@@ -83,12 +82,12 @@ node {
                 maxAttemptsTried = true;
                 println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
             }else {
-                if(numOfReadinessChecks == MAX_NUM_OF_CHECKS){
+                if(currentNumOfReadinessChecks == config.maxNumOfAttempts){
                     isReady = true;
                     maxAttemptsTried = true
                     config.hasFailed = true
                 }else{
-                    numOfReadinessChecks++;
+                    currentNumOfReadinessChecks++;
                     sleep 15
                 }
                 println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
