@@ -67,7 +67,7 @@ node {
         boolean isReady = false;
         String podName = "POD NOT FOUND"
 
-        while(!isReady && numOfReadinessChecks < MAX_NUM_OF_CHECKS){
+        while(isReady && numOfReadinessChecks < MAX_NUM_OF_CHECKS){
             String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
             def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
             println podInfoList.toString()
@@ -78,7 +78,11 @@ node {
 
             def readyStatusPair = readyStatus.tokenize('/')
             println readyStatusPair
-            isReady = (readyStatusPair[0] == readyStatusPair[1]) ? true : numOfReadinessChecks++
+            if(readyStatusPair[0] == readyStatusPair[1]){
+                isReady = true;
+            }else {
+                numOfReadinessChecks++;
+            }
         }
         println("${podName} is ready for testing")
 
