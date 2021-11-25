@@ -64,24 +64,19 @@ node {
 
         int numOfReadinessChecks = 0;
         int MAX_NUM_OF_CHECKS = 10;
-        do {
+        boolean isReady = false;
+        while(isReady && numOfReadinessChecks < MAX_NUM_OF_CHECKS){
             String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
-
             println podInfoList.toString()
             String podName = podInfoList.get(0)
             println "podName: ${podName}"
             String readyStatus = podInfoList.get(1)
             println "readyStatus: ${readyStatus}"
+
             def readyStatusPair = readyStatus.tokenize('/')
             println readyStatusPair
-
-            if(readyStatusPair[0] == readyStatusPair[1]){
-                continue //Break out of do while
-            } else {
-                numOfReadinessChecks++;
-            }
-
-        } while(numOfReadinessChecks < MAX_NUM_OF_CHECKS);
+            isReady = (readyStatusPair[0] == readyStatusPair[1]) ? true : numOfReadinessChecks++
+        }
         println("${podName} is ready for testing")
 
     }
