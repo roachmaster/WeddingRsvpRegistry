@@ -63,7 +63,7 @@ node {
         String containerName = "wedding-rsvp-registry"
 
         int numOfReadinessChecks = 0;
-        int MAX_NUM_OF_CHECKS = 20;
+        int MAX_NUM_OF_CHECKS = 5;
 
         boolean maxAttemptsTried = false
         boolean isReady = false;
