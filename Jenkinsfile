@@ -75,20 +75,13 @@ node {
             def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
             podName = podInfoList.get(0)
             String readyStatus = podInfoList.get(1)
-            println '''
-                podName: ${podName}
-                readyStatus: ${readyStatus}
-            '''
+            println "podName: ${podName}\nreadyStatus: ${readyStatus}"
 
             def readyStatusPair = readyStatus.tokenize('/')
             if(readyStatusPair[0] == readyStatusPair[1]){
                 isReady = true;
                 maxAttemptsTried = true;
-                println '''
-                    isReady: ${isReady}
-                    ${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts
-                    maxAttemptsTried: ${maxAttemptsTried}
-                '''
+                println "isReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
             }else {
                 if(numOfReadinessChecks == MAX_NUM_OF_CHECKS){
                     maxAttemptsTried = true
@@ -96,11 +89,7 @@ node {
                     numOfReadinessChecks++;
                     sleep 15
                 }
-                println '''
-                    isReady: ${isReady}
-                    ${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts
-                    maxAttemptsTried: ${maxAttemptsTried}
-                '''
+                println "isReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
             }
         }
         println("${podName} is ready for testing")
