@@ -67,6 +67,7 @@ node {
 
         boolean maxAttemptsTried = false
         boolean isReady = false;
+        boolean hasFailed = false;
 
         String podName = "POD NOT FOUND"
 
@@ -83,7 +84,9 @@ node {
                 println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
             }else {
                 if(numOfReadinessChecks == MAX_NUM_OF_CHECKS){
+                    isReady = true;
                     maxAttemptsTried = true
+                    hasFailed = true
                 }else{
                     numOfReadinessChecks++;
                     sleep 15
@@ -91,6 +94,10 @@ node {
                 println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
             }
         }
-        println("${podName} is ready for testing")
+        if(hasFailed){
+            println("${podName} is has failed to start within time frame")
+        }else {
+            println("${podName} is ready for testing")
+        }
     }
 }
