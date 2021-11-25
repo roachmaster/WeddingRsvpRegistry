@@ -60,6 +60,6 @@ node {
     }
 
     stage("Run Acceptance Test"){
-        waitForPodToBeReady name:"wedding-rsvp-registry", maxNumOfAttempts: 20
+        waitForPodToBeReady name:"wedding-rsvp-registry", maxNumOfAttempts: 30
     }
 }
