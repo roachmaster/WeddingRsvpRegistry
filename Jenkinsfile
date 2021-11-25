@@ -62,7 +62,7 @@ node {
     stage("Run Acceptance Test"){
         def config = [:]
         config.name = "wedding-rsvp-registry"
-        config.maxNumOfAttempts = 1;
+        config.maxNumOfAttempts = 20;
         waitForPodToBeReady config
     }
 }
