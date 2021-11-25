@@ -72,10 +72,10 @@ node {
             println "podName: ${podName}"
             String readyStatus = podInfoList.get(1)
             println "readyStatus: ${readyStatus}"
-            def readyStatusTuple = readyStatus.tokenize('/')
-            println readyStatusTuple
+            def readyStatusPair = readyStatus.tokenize('/')
+            println readyStatusPair
 
-            if(readyStatusTuple[0] == readyStatusTuple[1]){
+            if(readyStatusPair[0] == readyStatusPair[1]){
                 continue
             } else {
                 numOfReadinessChecks++;
