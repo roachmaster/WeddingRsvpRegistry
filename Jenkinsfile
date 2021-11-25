@@ -70,26 +70,25 @@ node {
 
         String podName = "POD NOT FOUND"
 
-        println "isReady: ${isReady}"
-        println "${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts"
-        println "maxAttemptsTried: ${maxAttemptsTried}"
         while(!isReady && !maxAttemptsTried){
             String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
             def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
-            println podInfoList.toString()
             podName = podInfoList.get(0)
-            println "podName: ${podName}"
             String readyStatus = podInfoList.get(1)
-            println "readyStatus: ${readyStatus}"
+            println '''
+                podName: ${podName}
+                readyStatus: ${readyStatus}
+            '''
 
             def readyStatusPair = readyStatus.tokenize('/')
-            println readyStatusPair
             if(readyStatusPair[0] == readyStatusPair[1]){
                 isReady = true;
                 maxAttemptsTried = true;
-                println "isReady: ${isReady}"
-                println "${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts"
-                println "maxAttemptsTried: ${maxAttemptsTried}"
+                println '''
+                    isReady: ${isReady}
+                    ${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts
+                    maxAttemptsTried: ${maxAttemptsTried}
+                '''
             }else {
                 if(numOfReadinessChecks == MAX_NUM_OF_CHECKS){
                     maxAttemptsTried = true
@@ -97,9 +96,11 @@ node {
                     numOfReadinessChecks++;
                     sleep 45
                 }
-                println "isReady: ${isReady}"
-                println "${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts"
-                println "maxAttemptsTried: ${maxAttemptsTried}"
+                println '''
+                    isReady: ${isReady}
+                    ${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts
+                    maxAttemptsTried: ${maxAttemptsTried}
+                '''
             }
         }
         println("${podName} is ready for testing")
