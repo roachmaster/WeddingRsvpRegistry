@@ -68,7 +68,7 @@ node {
 
         boolean maxAttemptsTried = false
         boolean isReady = false;
-        boolean hasFailed = false;
+        config.hasFailed = false;
 
         String podName = "POD NOT FOUND"
 
@@ -87,7 +87,7 @@ node {
                 if(numOfReadinessChecks == MAX_NUM_OF_CHECKS){
                     isReady = true;
                     maxAttemptsTried = true
-                    hasFailed = true
+                    config.hasFailed = true
                 }else{
                     numOfReadinessChecks++;
                     sleep 15
@@ -95,7 +95,7 @@ node {
                 println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
             }
         }
-        if(hasFailed){
+        if(config.hasFailed){
             println("${podName} is has failed to start within time frame")
         }else {
             println("${podName} is ready for testing")
