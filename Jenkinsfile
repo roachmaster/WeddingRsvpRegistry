@@ -64,12 +64,15 @@ node {
 
         int numOfReadinessChecks = 0;
         int MAX_NUM_OF_CHECKS = 10;
+
+        boolean maxAttemptsTried = false
         boolean isReady = false;
+
         String podName = "POD NOT FOUND"
 
         println "isReady: ${isReady}"
         println "${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts"
-        while(isReady && (numOfReadinessChecks < MAX_NUM_OF_CHECKS)){
+        while(!isReady && maxAttemptsTried){
             String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
             def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
             println podInfoList.toString()
@@ -82,12 +85,16 @@ node {
             println readyStatusPair
             if(readyStatusPair[0] == readyStatusPair[1]){
                 isReady = true;
-                numOfReadinessChecks = MAX_NUM_OF_CHECKS;
+                maxAttemptsTried = true;
                 println "isReady: ${isReady}"
                 println "${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts"
             }else {
-                numOfReadinessChecks++;
-                sleep 30
+                if(numOfReadinessChecks == MAX_NUM_OF_CHECKS){
+                    maxAttemptsTried = true
+                }else{
+                    numOfReadinessChecks++;
+                    sleep 30
+                }
                 println "isReady: ${isReady}"
                 println "${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts"
             }
