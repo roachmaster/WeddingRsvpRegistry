@@ -80,8 +80,10 @@ node {
             println readyStatusPair
             if(readyStatusPair[0] == readyStatusPair[1]){
                 isReady = true;
+                numOfReadinessChecks = MAX_NUM_OF_CHECKS;
             }else {
                 numOfReadinessChecks++;
+                sleep 30
             }
         }
         println("${podName} is ready for testing")
