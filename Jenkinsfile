@@ -62,7 +62,7 @@ node {
     stage("Run Acceptance Test"){
         def config = [:]
         config.name = "wedding-rsvp-registry"
-        config.maxNumOfAttempts = 2;
+        config.maxNumOfAttempts = 1;
 
         boolean maxAttemptsTried = false
         boolean isReady = false;
@@ -73,7 +73,7 @@ node {
         while(!isReady && !maxAttemptsTried){
             String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${config.name}").trim().split("\\s+")
             def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
-            config.podName = podInfoList.get(0)
+            podName = podInfoList.get(0)
             String readyStatus = podInfoList.get(1)
 
             def readyStatusPair = readyStatus.tokenize('/')
