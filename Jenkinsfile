@@ -95,7 +95,7 @@ node {
                     maxAttemptsTried = true
                 }else{
                     numOfReadinessChecks++;
-                    sleep 30
+                    sleep 45
                 }
                 println "isReady: ${isReady}"
                 println "${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts"
