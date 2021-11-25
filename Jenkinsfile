@@ -62,5 +62,6 @@ node {
     stage("Run Acceptance Test"){
         waitForPodToBeReady name:"wedding-rsvp-registry", maxNumOfAttempts: 30
         sh "./gradlew acceptanceTest --info"
+        cucumber buildStatus: 'null', customCssFiles: '', customJsFiles: '', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/Cucumber-*.json', jsonReportDirectory: 'build/reports/tests/acceptanceTest', pendingStepsNumber: -1, reportTitle: 'WeddingRsvpRegistry', skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
     }
 }
