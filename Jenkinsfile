@@ -80,7 +80,7 @@ node {
             if(readyStatusPair[0] == readyStatusPair[1]){
                 isReady = true;
                 maxAttemptsTried = true;
-                println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
+                println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${currentNumOfReadinessChecks} out of ${config.maxNumOfAttempts} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
             }else {
                 if(currentNumOfReadinessChecks == config.maxNumOfAttempts){
                     isReady = true;
@@ -90,7 +90,7 @@ node {
                     currentNumOfReadinessChecks++;
                     sleep 15
                 }
-                println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
+                println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${currentNumOfReadinessChecks} out of ${config.maxNumOfAttempts} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
             }
         }
         if(config.hasFailed){
