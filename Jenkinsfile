@@ -69,20 +69,19 @@ node {
         boolean maxAttemptsTried = false
         boolean isReady = false;
         config.hasFailed = false;
-
-        String podName = "POD NOT FOUND"
+        config.podName = "POD NOT FOUND"
 
         while(!isReady && !maxAttemptsTried){
             String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${config.name}").trim().split("\\s+")
             def podInfoList = new ArrayList<String>(Arrays.asList(podInfo))
-            podName = podInfoList.get(0)
+            config.podName = podInfoList.get(0)
             String readyStatus = podInfoList.get(1)
 
             def readyStatusPair = readyStatus.tokenize('/')
             if(readyStatusPair[0] == readyStatusPair[1]){
                 isReady = true;
                 maxAttemptsTried = true;
-                println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
+                println "podName: ${config.podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
             }else {
                 if(numOfReadinessChecks == MAX_NUM_OF_CHECKS){
                     isReady = true;
@@ -92,13 +91,13 @@ node {
                     numOfReadinessChecks++;
                     sleep 15
                 }
-                println "podName: ${podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
+                println "podName: ${config.podName}\nreadyStatus: ${readyStatus}\nisReady: ${isReady}\n${numOfReadinessChecks} out of ${MAX_NUM_OF_CHECKS} attempts\nmaxAttemptsTried: ${maxAttemptsTried}"
             }
         }
         if(config.hasFailed){
-            error '${podName} is has failed to start within time frame'
+            error '${config.podName} is has failed to start within time frame'
         }else {
-            println("${podName} is ready for testing")
+            println("${config.podName} is ready for testing")
         }
     }
 }
