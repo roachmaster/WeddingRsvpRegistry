@@ -65,10 +65,11 @@ node {
         int numOfReadinessChecks = 0;
         int MAX_NUM_OF_CHECKS = 10;
         boolean isReady = false;
+        String podName
         while(isReady && numOfReadinessChecks < MAX_NUM_OF_CHECKS){
             String[] podInfo = sh(returnStdout: true ,script: "kubectl get pods | grep ^${containerName}").trim().split("\\s+")
             println podInfoList.toString()
-            String podName = podInfoList.get(0)
+            podName = podInfoList.get(0)
             println "podName: ${podName}"
             String readyStatus = podInfoList.get(1)
             println "readyStatus: ${readyStatus}"
