@@ -76,7 +76,7 @@ node {
             println readyStatusPair
 
             if(readyStatusPair[0] == readyStatusPair[1]){
-                continue
+                continue //Break out of do while
             } else {
                 numOfReadinessChecks++;
             }
