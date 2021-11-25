@@ -96,7 +96,7 @@ node {
             }
         }
         if(config.hasFailed){
-            println("${podName} is has failed to start within time frame")
+            error '${podName} is has failed to start within time frame'
         }else {
             println("${podName} is ready for testing")
         }
