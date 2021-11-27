@@ -9,7 +9,7 @@ node {
 
     stage("Build"){
         if(runBuildAndTest){
-            sh "./gradlew clean build -x test -x integrationTest -x acceptanceTest--info"
+            sh "./gradlew clean build -x test -x integrationTest -x acceptanceTest --info"
         }
     }
 
