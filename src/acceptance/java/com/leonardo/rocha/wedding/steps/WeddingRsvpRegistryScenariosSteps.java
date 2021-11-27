@@ -156,6 +156,6 @@ public class WeddingRsvpRegistryScenariosSteps {
     @Then("the Wedding Rsvp Registry App responds with the delete all guests")
     public void the_wedding_rsvp_registry_app_responds_with_the_delete_all_guests() throws JsonProcessingException {
         scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualDeleteAllResponse));
-        assertEquals(2L,actualDeleteAllResponse.getNumOfGuests());
+        assertEquals(0L,actualDeleteAllResponse.getNumOfGuests());
     }
 }
