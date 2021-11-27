@@ -15,7 +15,7 @@ node {
 
     stage("Run Unit Test"){
         if(runBuildAndTest){
-            sh "./gradlew clean test -x acceptanceTest -x integrationTest --info"
+            sh "./gradlew test -x acceptanceTest -x integrationTest --info"
             junit 'build/test-results/**/*.xml'
         }
     }

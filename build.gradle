@@ -35,9 +35,9 @@ dependencies {
 	testImplementation("io.cucumber:cucumber-junit:7.0.0")
 }
 
-test {
-	useJUnitPlatform()
-}
+//test {
+//	useJUnitPlatform()
+//}
 
 sourceSets{
 	integration {
