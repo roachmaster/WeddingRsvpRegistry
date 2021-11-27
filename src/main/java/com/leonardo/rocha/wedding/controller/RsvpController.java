@@ -44,7 +44,7 @@ public class RsvpController {
 		return ResponseEntityHelper.createGuest(this.guestDao, name, maxGuest);
 	}
 
-	@RequestMapping(value = "guests/delete", method = RequestMethod.GET)
+	@RequestMapping(value = "guests/delete", method = RequestMethod.DELETE)
 	public ResponseEntity<DeleteAllResponse> deleteGuests() {
 		logger.info("Deleting Guests");
 		return ResponseEntityHelper.deleteGuests(this.guestDao);

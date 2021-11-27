@@ -143,8 +143,19 @@ public class WeddingRsvpRegistryScenariosSteps {
     }
 
     @Then("the Wedding Rsvp Registry App responds with the Guest deleted")
-    public void the_wedding_rsvp_registry_app_responds_with_the_guest_deleted() {
+    public void the_wedding_rsvp_registry_app_responds_with_the_guest_deleted() throws JsonProcessingException {
+        scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualDeleteGuestResponse));
         assert actualDeleteGuestResponse.getNumOfGuestsDeleted() == 1L;
     }
 
+    @When("the Wedding Rsvp Registry App receives a valid delete all Guests request")
+    public void the_wedding_rsvp_registry_app_receives_a_valid_delete_all_guests_request() {
+        actualDeleteAllResponse = this.weddingRsvpRegistryApiClient.deleteGuests();
+    }
+
+    @Then("the Wedding Rsvp Registry App responds with the delete all guests")
+    public void the_wedding_rsvp_registry_app_responds_with_the_delete_all_guests() throws JsonProcessingException {
+        scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualDeleteAllResponse));
+        assert actualDeleteAllResponse.getNumOfGuests() == 2L;
+    }
 }
