@@ -9,13 +9,13 @@ node {
 
     stage("Build"){
         if(runBuildAndTest){
-            sh "./gradlew clean build -x test -x integrationTest -x acceptanceTest --info"
+            sh "./gradlew clean build -x test -x acceptanceTest -x integrationTest --info"
         }
     }
 
     stage("Run Unit Test"){
         if(runBuildAndTest){
-            sh "./gradlew clean build test -x integrationTest -x acceptanceTest --info"
+            sh "./gradlew clean test -x acceptanceTest -x integrationTest --info"
             junit 'build/test-results/**/*.xml'
         }
     }

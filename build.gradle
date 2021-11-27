@@ -41,11 +41,13 @@ test {
 
 sourceSets{
 	integration {
+		java.srcDir("${projectDir}/src/integration/java")
 		compileClasspath += main.output + test.output
 		runtimeClasspath += main.output + test.output
 	}
 
 	acceptance {
+		java.srcDir("${projectDir}/src/acceptance/java")
 		compileClasspath += main.output + test.output
 		runtimeClasspath += main.output + test.output
 	}
