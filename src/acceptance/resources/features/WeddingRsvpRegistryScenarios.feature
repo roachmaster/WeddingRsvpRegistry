@@ -16,3 +16,9 @@ Feature: Scenarios for Testing Wedding Rsvp Registry
     And the Wedding Rsvp Registry App has saved Guests
     When the Wedding Rsvp Registry App receives a valid get all Guests request
     Then the Wedding Rsvp Registry App responds with all the saved Guests
+
+  Scenario: Test a Valid Update Request
+    Given that the Wedding Rsvp Registry App is Running
+    And the Wedding Rsvp Registry App has a saved Guest
+    When the Wedding Rsvp Registry App receives a valid update Guest request
+    Then the Wedding Rsvp Registry App responds with the updated Guest

@@ -110,10 +110,23 @@ public class WeddingRsvpRegistryScenariosSteps {
     public void the_wedding_rsvp_registry_app_receives_a_valid_get_all_guests_request() {
         actualGuests = this.weddingRsvpRegistryApiClient.getGuests();
     }
-    
+
     @Then("the Wedding Rsvp Registry App responds with all the saved Guests")
     public void the_wedding_rsvp_registry_app_responds_with_all_the_saved_guests() throws JsonProcessingException {
         scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualGuests));
         assert expectedGuests.equals(actualGuests);
     }
+
+    @When("the Wedding Rsvp Registry App receives a valid update Guest request")
+    public void the_wedding_rsvp_registry_app_receives_a_valid_update_guest_request() {
+        actualGuest = this.weddingRsvpRegistryApiClient.updateGuest("Emily",true,2);
+    }
+
+    @Then("the Wedding Rsvp Registry App responds with the updated Guest")
+    public void the_wedding_rsvp_registry_app_responds_with_the_updated_guest() throws JsonProcessingException {
+        expectedGuest = this.guestDB.getGuest("Emily");
+        scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualGuest));
+        assert expectedGuest.equals(actualGuest);
+    }
+
 }
