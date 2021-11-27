@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.leonardo.rocha.wedding.client.WeddingRsvpRegistryApiClient;
 import com.leonardo.rocha.wedding.config.CucumberConfig;
+import com.leonardo.rocha.wedding.data.DeleteAllResponse;
+import com.leonardo.rocha.wedding.data.DeleteGuestResponse;
 import com.leonardo.rocha.wedding.data.Guest;
 import com.leonardo.rocha.wedding.service.GuestDB;
 import io.cucumber.java.Before;
@@ -46,6 +48,10 @@ public class WeddingRsvpRegistryScenariosSteps {
 
     List<Guest> actualGuests;
 
+    DeleteGuestResponse actualDeleteGuestResponse;
+
+    DeleteAllResponse actualDeleteAllResponse;
+
     Scenario scenario;
 
     @Before
@@ -53,7 +59,9 @@ public class WeddingRsvpRegistryScenariosSteps {
         this.scenario = scenario;
         this.guestDB.deleteGuests();
         this.actualGuest = null;
+        this.actualGuests = null;
         this.expectedGuest = null;
+        this.expectedGuests = null;
     }
 
     @Given("that the Wedding Rsvp Registry App is Running")
@@ -127,6 +135,16 @@ public class WeddingRsvpRegistryScenariosSteps {
         expectedGuest = this.guestDB.getGuest("Emily");
         scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualGuest));
         assert expectedGuest.equals(actualGuest);
+    }
+
+    @When("the Wedding Rsvp Registry App receives a valid delete Guest request")
+    public void the_wedding_rsvp_registry_app_receives_a_valid_delete_guest_request() {
+        actualDeleteGuestResponse = this.weddingRsvpRegistryApiClient.deleteGuest("Emily");
+    }
+
+    @Then("the Wedding Rsvp Registry App responds with the Guest deleted")
+    public void the_wedding_rsvp_registry_app_responds_with_the_guest_deleted() {
+        assert actualDeleteGuestResponse.getNumOfGuestsDeleted() == 1L;
     }
 
 }

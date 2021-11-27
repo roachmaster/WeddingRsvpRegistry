@@ -42,12 +42,12 @@ public class WeddingRsvpRegistryApiClient {
 
     public DeleteAllResponse deleteGuests(){
         logger.info("deleteGuests");
-        return webClient.post().uri("guests/delete").retrieve().bodyToMono(DeleteAllResponse.class).block();
+        return webClient.delete().uri("guests/delete").retrieve().bodyToMono(DeleteAllResponse.class).block();
     }
 
     public DeleteGuestResponse deleteGuest(String name){
         logger.info("deleteGuests name: {}", name);
-        return webClient.post().uri("guest/delete/{name}", name).retrieve().bodyToMono(DeleteGuestResponse.class).block();
+        return webClient.delete().uri("guest/delete/{name}", name).retrieve().bodyToMono(DeleteGuestResponse.class).block();
     }
 
     public Guest updateGuest(String name, boolean going , int confirmedGuest){
