@@ -19,6 +19,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @CucumberContextConfiguration
@@ -38,7 +40,11 @@ public class WeddingRsvpRegistryScenariosSteps {
 
     Guest expectedGuest;
 
-    Guest guest;
+    Guest actualGuest;
+
+    List<Guest> expectedGuests;
+
+    List<Guest> actualGuests;
 
     Scenario scenario;
 
@@ -46,7 +52,7 @@ public class WeddingRsvpRegistryScenariosSteps {
     public void setUp(Scenario scenario){
         this.scenario = scenario;
         this.guestDB.deleteGuests();
-        this.guest = null;
+        this.actualGuest = null;
         this.expectedGuest = null;
     }
 
@@ -57,20 +63,20 @@ public class WeddingRsvpRegistryScenariosSteps {
 
     @When("the Wedding Rsvp Registry App receives a valid create Guest request")
     public void the_wedding_rsvp_registry_app_receives_a_valid_create_guest_request() {
-        guest = weddingRsvpRegistryApiClient.createGuest("Leo", 5);
+        actualGuest = weddingRsvpRegistryApiClient.createGuest("Leo", 5);
     }
 
     @Then("the Wedding Rsvp Registry App responds with a created status")
     public void the_wedding_rsvp_registry_app_responds_with_a_created_status() throws JsonProcessingException {
-        scenario.log("Received the following response \n" + objectWriter.writeValueAsString(guest));
-        assert Objects.nonNull(guest);
+        scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualGuest));
+        assert Objects.nonNull(actualGuest);
     }
 
     @And("the Wedding Rsvp Registry App saves the Guest")
     public void the_wedding_rsvp_registry_app_saves_the_guest() throws JsonProcessingException {
-        Guest savedGuest = this.guestDB.getGuest(guest.getName());
+        Guest savedGuest = this.guestDB.getGuest(actualGuest.getName());
         scenario.log("Received the following response from DB \n" + objectWriter.writeValueAsString(savedGuest));
-        assert guest.equals(savedGuest);
+        assert actualGuest.equals(savedGuest);
     }
 
     @Given("the Wedding Rsvp Registry App has a saved Guest")
@@ -81,12 +87,33 @@ public class WeddingRsvpRegistryScenariosSteps {
 
     @When("the Wedding Rsvp Registry App receives a valid get Guest request")
     public void the_wedding_rsvp_registry_app_receives_a_valid_get_guest_request() {
-        this.guest = this.weddingRsvpRegistryApiClient.getGuest("Emily");
+        this.actualGuest = this.weddingRsvpRegistryApiClient.getGuest("Emily");
     }
 
     @Then("the Wedding Rsvp Registry App responds with the saved Guest")
     public void the_wedding_rsvp_registry_app_responds_with_the_saved_guest() throws JsonProcessingException {
-        scenario.log("Received the following response \n" + objectWriter.writeValueAsString(guest));
-        assert expectedGuest.equals(guest);
+        scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualGuest));
+        assert expectedGuest.equals(actualGuest);
+    }
+
+    @Given("the Wedding Rsvp Registry App has saved Guests")
+    public void the_wedding_rsvp_registry_app_has_a_saved_guests() throws JsonProcessingException {
+        expectedGuests = new ArrayList<>();
+        Guest guest1 = this.guestDB.createGuest("Max", 2);
+        Guest guest2 = this.guestDB.createGuest("Kahlua",6);
+        expectedGuests.add(guest1);
+        expectedGuests.add(guest2);
+        scenario.log("Received the following response from DB \n" + objectWriter.writeValueAsString(expectedGuests));
+    }
+
+    @When("the Wedding Rsvp Registry App receives a valid get all Guests request")
+    public void the_wedding_rsvp_registry_app_receives_a_valid_get_all_guests_request() {
+        actualGuests = this.weddingRsvpRegistryApiClient.getGuests();
+    }
+    
+    @Then("the Wedding Rsvp Registry App responds with all the saved Guests")
+    public void the_wedding_rsvp_registry_app_responds_with_all_the_saved_guests() throws JsonProcessingException {
+        scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualGuests));
+        assert expectedGuests.equals(actualGuests);
     }
 }

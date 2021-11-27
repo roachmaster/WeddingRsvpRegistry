@@ -34,7 +34,6 @@ public class CucumberConfig {
     @Bean
     public WebClient webClient(WebClient.Builder builder){
         String baseUrl = "http://" + KUBE_NAME + ":" + KUBE_PORT + "/";
-        System.out.println(baseUrl);
         return builder.baseUrl(baseUrl).build();
     }
 
