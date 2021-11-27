@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.ConfigDataApplicationContextInitial
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-
+import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -77,14 +77,14 @@ public class WeddingRsvpRegistryScenariosSteps {
     @Then("the Wedding Rsvp Registry App responds with a created status")
     public void the_wedding_rsvp_registry_app_responds_with_a_created_status() throws JsonProcessingException {
         scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualGuest));
-        assert Objects.nonNull(actualGuest);
+        assertNotNull(actualGuest);
     }
 
     @And("the Wedding Rsvp Registry App saves the Guest")
     public void the_wedding_rsvp_registry_app_saves_the_guest() throws JsonProcessingException {
         Guest savedGuest = this.guestDB.getGuest(actualGuest.getName());
         scenario.log("Received the following response from DB \n" + objectWriter.writeValueAsString(savedGuest));
-        assert actualGuest.equals(savedGuest);
+        assertEquals(savedGuest,actualGuest);
     }
 
     @Given("the Wedding Rsvp Registry App has a saved Guest")
@@ -101,7 +101,7 @@ public class WeddingRsvpRegistryScenariosSteps {
     @Then("the Wedding Rsvp Registry App responds with the saved Guest")
     public void the_wedding_rsvp_registry_app_responds_with_the_saved_guest() throws JsonProcessingException {
         scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualGuest));
-        assert expectedGuest.equals(actualGuest);
+        assertEquals(expectedGuest, actualGuest);
     }
 
     @Given("the Wedding Rsvp Registry App has saved Guests")
@@ -122,7 +122,7 @@ public class WeddingRsvpRegistryScenariosSteps {
     @Then("the Wedding Rsvp Registry App responds with all the saved Guests")
     public void the_wedding_rsvp_registry_app_responds_with_all_the_saved_guests() throws JsonProcessingException {
         scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualGuests));
-        assert expectedGuests.equals(actualGuests);
+        assertEquals(expectedGuests,actualGuests);
     }
 
     @When("the Wedding Rsvp Registry App receives a valid update Guest request")
@@ -134,7 +134,7 @@ public class WeddingRsvpRegistryScenariosSteps {
     public void the_wedding_rsvp_registry_app_responds_with_the_updated_guest() throws JsonProcessingException {
         expectedGuest = this.guestDB.getGuest("Emily");
         scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualGuest));
-        assert expectedGuest.equals(actualGuest);
+        assertEquals(expectedGuest,actualGuest);
     }
 
     @When("the Wedding Rsvp Registry App receives a valid delete Guest request")
@@ -145,7 +145,7 @@ public class WeddingRsvpRegistryScenariosSteps {
     @Then("the Wedding Rsvp Registry App responds with the Guest deleted")
     public void the_wedding_rsvp_registry_app_responds_with_the_guest_deleted() throws JsonProcessingException {
         scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualDeleteGuestResponse));
-        assert actualDeleteGuestResponse.getNumOfGuestsDeleted() == 1L;
+        assertEquals(1L, actualDeleteGuestResponse.getNumOfGuestsDeleted());
     }
 
     @When("the Wedding Rsvp Registry App receives a valid delete all Guests request")
@@ -156,6 +156,6 @@ public class WeddingRsvpRegistryScenariosSteps {
     @Then("the Wedding Rsvp Registry App responds with the delete all guests")
     public void the_wedding_rsvp_registry_app_responds_with_the_delete_all_guests() throws JsonProcessingException {
         scenario.log("Received the following response \n" + objectWriter.writeValueAsString(actualDeleteAllResponse));
-        assert actualDeleteAllResponse.getNumOfGuests() == 2L;
+        assertEquals(2L,actualDeleteAllResponse.getNumOfGuests());
     }
 }
