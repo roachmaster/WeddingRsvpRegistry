@@ -36,6 +36,8 @@ public class WeddingRsvpRegistryScenariosSteps {
     @Autowired
     GuestDB guestDB;
 
+    Guest expectedGuest;
+
     Guest guest;
 
     Scenario scenario;
@@ -44,6 +46,8 @@ public class WeddingRsvpRegistryScenariosSteps {
     public void setUp(Scenario scenario){
         this.scenario = scenario;
         this.guestDB.deleteGuests();
+        this.guest = null;
+        this.expectedGuest = null;
     }
 
     @Given("that the Wedding Rsvp Registry App is Running")
@@ -67,5 +71,22 @@ public class WeddingRsvpRegistryScenariosSteps {
         Guest savedGuest = this.guestDB.getGuest(guest.getName());
         scenario.log("Received the following response from DB \n" + objectWriter.writeValueAsString(savedGuest));
         assert guest.equals(savedGuest);
+    }
+
+    @Given("the Wedding Rsvp Registry App has a saved Guest")
+    public void the_wedding_rsvp_registry_app_has_a_saved_guest() throws JsonProcessingException {
+        this.expectedGuest = this.guestDB.createGuest("Emily", 3);
+        scenario.log("Received the following response from DB \n" + objectWriter.writeValueAsString(expectedGuest));
+    }
+
+    @When("the Wedding Rsvp Registry App receives a valid get Guest request")
+    public void the_wedding_rsvp_registry_app_receives_a_valid_get_guest_request() {
+        this.guest = this.weddingRsvpRegistryApiClient.getGuest("Emily");
+    }
+
+    @Then("the Wedding Rsvp Registry App responds with the saved Guest")
+    public void the_wedding_rsvp_registry_app_responds_with_the_saved_guest() throws JsonProcessingException {
+        scenario.log("Received the following response \n" + objectWriter.writeValueAsString(guest));
+        assert expectedGuest.equals(guest);
     }
 }
