@@ -35,10 +35,6 @@ dependencies {
 	testImplementation("io.cucumber:cucumber-junit:7.0.0")
 }
 
-//test {
-//	useJUnitPlatform()
-//}
-
 sourceSets{
 	integration {
 		java.srcDir("${projectDir}/src/integration/java")

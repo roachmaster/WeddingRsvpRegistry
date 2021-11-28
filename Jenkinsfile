@@ -39,28 +39,18 @@ node {
         }
     }
 
-    stage("Create Secret"){
+    stage("K3S Deployment"){
         if(k3sBuild){
             withCredentials([usernamePassword(credentialsId: '8047ae57-cfa7-4ee1-86aa-be906b124593', passwordVariable: 'credPw', usernameVariable: 'credName')]) {
                 k3sSecret name:"mysql-pass", credPw: "${credPw}"
             }
-        }
-    }
-
-    stage("Create Deployment"){
-        if(k3sBuild){
             k3sDeployment name: "wedding-rsvp-registry"
-        }
-    }
-
-    stage("Create Service"){
-        if(k3sBuild){
             k3sService name: "wedding-rsvp-registry"
+            waitForPodToBeReady name:"wedding-rsvp-registry", maxNumOfAttempts: 30
         }
     }
 
     stage("Run Acceptance Test"){
-        waitForPodToBeReady name:"wedding-rsvp-registry", maxNumOfAttempts: 30
         sh "./gradlew acceptanceTest --info"
         cucumber buildStatus: 'null', customCssFiles: '', customJsFiles: '', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/Cucumber-*.json', jsonReportDirectory: 'build/reports/tests/acceptanceTest', pendingStepsNumber: -1, reportTitle: 'WeddingRsvpRegistry', skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
     }
